@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="60 80 500 840">
+  <g fill="none" stroke="#000" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M143 95
+             H294
+             Q319 95 336 131
+             Q367 202 369 270
+             Q364 322 332 367
+             Q293 419 285 430
+             V594
+             Q290 650 330 694
+             Q388 751 468 764
+             H504
+             Q541 764 541 801
+             V856
+             Q541 897 500 897
+             H143
+             Q80 897 80 836
+             V684
+             Q80 666 95 658
+             V349
+             Q95 335 80 324
+             V158
+             Q80 118 108 103
+             Q124 95 143 95
+             Z"/>
+    <!-- Shared hero orb anchor for left/right panels -->
+    <circle id="hero-orb" cx="215" cy="200" r="72"/>
+    <!-- Shared small action anchors along the inner column -->
+    <circle id="action-slot-1" cx="207" cy="395" r="31"/>
+    <circle id="action-slot-2" cx="207" cy="505" r="31"/>
+    <circle id="action-slot-3" cx="207" cy="615" r="31"/>
+    <!-- Left panel footer anchors -->
+    <circle id="left-footer-ra-minus" cx="140" cy="760" r="48"/>
+    <circle id="left-footer-dec-minus" cx="300" cy="821" r="48"/>
+    <circle id="left-footer-func" cx="490" cy="836" r="31"/>   
+  </g>
+</svg>

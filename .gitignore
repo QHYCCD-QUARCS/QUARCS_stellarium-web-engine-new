@@ -1,0 +1,49 @@
+*.o
+*.swp
+*~
+*.obj
+*.pyc
+*.vimrc
+*.ycm_extra_conf.py
+/todo
+/build*
+.sconsign.dblite
+/.cache
+Leap_Second.dat
+de421.bsp
+deltat.data
+deltat.preds
+hip_main.dat.gz
+
+apps/web-frontend/node_modules/.cache/*
+
+# --- Frontend build artifacts & caches ---
+# ignore node modules everywhere
+node_modules/
+
+# common build outputs
+dist/
+build/
+
+# tool caches
+.cache/
+.parcel-cache/
+.vite/
+.turbo/
+.eslintcache
+
+# test/coverage
+coverage/
+
+# logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+apps/web-frontend/test-results/*
+apps/web-frontend/output/
+apps/web-frontend/tmp-*
