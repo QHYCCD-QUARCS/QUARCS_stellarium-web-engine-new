@@ -33,16 +33,29 @@
         </button>
       </section>
 
-      <div v-if="toolItems.length" class="wing-side-rail">
+      <div v-if="statusItems.length" class="wing-side-status">
         <button
-          v-for="tool in toolItems"
-          :key="tool.id"
-          class="side-rail__button"
+          v-for="status in statusItems"
+          :key="status.id"
+          class="status-pill"
+          :class="status.pillClass"
           type="button"
-          @click="$emit('tool-action', tool.id)"
+          @click="status.actionId ? $emit('tool-action', status.actionId) : null"
         >
-          <span class="control-tag control-tag--button">{{ tool.tag }}</span>
-          {{ tool.label }}
+          <span class="control-tag control-tag--button">{{ status.tag }}</span>
+          <img
+            v-if="status.iconSrc"
+            class="status-pill__icon-image"
+            :src="status.iconSrc"
+            :alt="status.id"
+          >
+          <v-icon
+            v-else-if="status.icon"
+            class="status-pill__icon"
+            :class="status.iconClass"
+          >
+            {{ status.icon }}
+          </v-icon>
         </button>
       </div>
 
@@ -128,6 +141,10 @@ export default {
       default: () => []
     },
     toolItems: {
+      type: Array,
+      default: () => []
+    },
+    statusItems: {
       type: Array,
       default: () => []
     },
@@ -488,18 +505,19 @@ export default {
   letter-spacing: 0.04em;
 }
 
-.wing-side-rail {
+.wing-side-status {
   position: absolute;
-  right: 18px;
-  top: 252px;
-  width: 60px;
-  padding: 12px 8px;
+  right: 14px;
+  top: 240px;
+  width: 68px;
+  padding: 12px 10px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  border-radius: 28px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 32px;
   background:
-    linear-gradient(180deg, rgba(15, 27, 46, 0.76), rgba(7, 13, 25, 0.84));
+    linear-gradient(180deg, rgba(15, 27, 46, 0.8), rgba(7, 13, 25, 0.9));
   box-shadow:
     inset 0 1px 0 rgba(220, 236, 255, 0.12),
     inset 0 0 0 1px rgba(131, 171, 239, 0.12),
@@ -508,22 +526,55 @@ export default {
   pointer-events: none;
 }
 
-.side-rail__button {
+.status-pill {
   position: relative;
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   border: 0;
-  border-radius: 14px;
+  border-radius: 50%;
   background:
     linear-gradient(180deg, rgba(30, 44, 70, 0.78), rgba(15, 24, 40, 0.88));
   color: rgba(242, 246, 251, 0.9);
-  font-size: 20px;
   cursor: pointer;
   box-shadow:
     inset 0 1px 0 rgba(230, 240, 255, 0.2),
     inset 0 0 0 1px rgba(122, 166, 239, 0.12),
     0 8px 18px rgba(2, 7, 16, 0.18);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   pointer-events: auto;
+}
+
+.status-pill__icon-image {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.status-pill__icon {
+  font-size: 24px !important;
+}
+
+.status-pill__icon--connected {
+  color: #78ec9a;
+}
+
+.status-pill__icon--busy {
+  color: #ffd66e;
+}
+
+.status-pill__icon--error {
+  color: #ff6d6d;
+}
+
+.status-pill__icon--offline {
+  color: rgba(233, 239, 246, 0.74);
+}
+
+.status-pill--clickable:active {
+  transform: scale(0.97);
 }
 
 .wing-footer {

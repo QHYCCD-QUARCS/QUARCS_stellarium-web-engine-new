@@ -139,7 +139,7 @@ export default {
           left: '0%',
           right: '2%',
           bottom: '0%',
-          top: '10%',
+          top: '18%',
           containLabel: true
         },
         xAxis: {
@@ -198,7 +198,7 @@ export default {
         legend: {
           data: ['RES', 'RA', 'DEC', 'TOTAL'],
           formatter: (name) => this.formatLegendLabel(name),
-          top: -5,       // 设置图例距离顶部的距离
+          top: 4,
           left: compactLegend ? 2 : 'auto',
           right: compactLegend ? 2 : 5,
           itemWidth: compactLegend ? 5 : 7,
@@ -458,4 +458,3 @@ export default {
   box-sizing: border-box;
 }
 </style>
-

@@ -6,6 +6,20 @@
       <section class="wing-hero">
         <span class="control-tag control-tag--section">L-Hero</span>
         <p class="wing-eyebrow">{{ heroEyebrow }}</p>
+        <div class="mode-ring" :style="modeRingStyle">
+          <button
+            v-for="(item, index) in primaryModes"
+            :key="item.id"
+            class="mode-ring__slot"
+            :class="{ 'mode-ring__slot--active': item.id === activeMode }"
+            :style="modeRingItemStyle(index)"
+            type="button"
+            @click="$emit('set-mode', item.id)"
+          >
+            <span class="control-tag control-tag--button">{{ item.tag }}</span>
+            <span class="mode-ring__label" :style="modeRingLabelStyle(index)">{{ item.label }}</span>
+          </button>
+        </div>
         <button
           class="hero-orb hero-orb--button"
           :style="heroOrbStyle"
@@ -20,20 +34,6 @@
           <span>{{ heroTitle }}</span>
         </div>
       </section>
-
-      <div class="wing-side-rail">
-        <button
-          v-for="item in primaryModes"
-          :key="item.id"
-          class="side-rail__button"
-          :class="{ 'side-rail__button--active': item.id === activeMode }"
-          type="button"
-          @click="$emit('set-mode', item.id)"
-        >
-          <span class="control-tag control-tag--button">{{ item.tag }}</span>
-          {{ item.label }}
-        </button>
-      </div>
 
       <section class="wing-menu">
         <button
@@ -117,6 +117,11 @@ const PANEL_WIDTH = 510
 const MENU_ICON_SIZE = 58
 const FOOTER_BTN_SIZE = 76
 const FOOTER_ZONE_TOP = PANEL_HEIGHT - PANEL_FOOTER_HEIGHT
+const HERO_ORB_SIZE = 148
+const MODE_RING_SIZE = 248
+const MODE_RING_SEGMENT_WIDTH = 74
+const MODE_RING_SEGMENT_HEIGHT = 118
+const MODE_RING_START_ANGLE = -90
 const PANEL_CLIP_PATH = 'path("M 84.66 15.29 H 238.68 Q 264.18 15.29 281.52 51.97 Q 313.14 124.32 315.18 193.62 Q 310.08 246.61 277.44 292.47 Q 237.66 345.46 229.50 356.67 V 523.79 Q 234.60 580.86 275.40 625.70 Q 334.56 683.78 416.16 697.03 H 452.88 Q 490.62 697.03 490.62 734.73 V 790.78 Q 490.62 832.56 448.80 832.56 H 84.66 Q 20.40 832.56 20.40 770.40 V 615.50 Q 20.40 597.16 35.70 589.01 V 274.12 Q 35.70 259.86 20.40 248.65 V 79.49 Q 20.40 38.72 48.96 23.44 Q 65.28 15.29 84.66 15.29 Z")'
 const BLUR_SOURCE_IDS = ['guiderCamera-canvas', 'mainCamera-canvas', 'stel-canvas']
 
@@ -202,6 +207,15 @@ export default {
       return {
         left: `${Math.round(x - 74)}px`,
         top: `${Math.round(y - 74)}px`
+      }
+    },
+    modeRingStyle () {
+      const scale = this.geometryScale
+      const x = (HERO_CIRCLE.cx - VIEWBOX.x) * scale
+      const y = (HERO_CIRCLE.cy - VIEWBOX.y) * scale
+      return {
+        left: `${Math.round(x - (MODE_RING_SIZE / 2))}px`,
+        top: `${Math.round(y - (MODE_RING_SIZE / 2))}px`
       }
     },
     footerLeftButtonStyle () {
@@ -292,6 +306,20 @@ export default {
       return {
         left: `${Math.round(x - (FOOTER_BTN_SIZE / 2))}px`,
         top: `${Math.round(y - (FOOTER_BTN_SIZE / 2) - FOOTER_ZONE_TOP)}px`
+      }
+    },
+    modeRingItemStyle (index) {
+      const segmentAngle = 360 / Math.max(this.primaryModes.length, 1)
+      const angle = MODE_RING_START_ANGLE + (segmentAngle * index)
+      return {
+        transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-${(MODE_RING_SIZE - MODE_RING_SEGMENT_HEIGHT) / 2}px)`
+      }
+    },
+    modeRingLabelStyle (index) {
+      const segmentAngle = 360 / Math.max(this.primaryModes.length, 1)
+      const angle = MODE_RING_START_ANGLE + (segmentAngle * index)
+      return {
+        transform: `rotate(${-angle}deg)`
       }
     }
   }
@@ -388,6 +416,62 @@ export default {
   inset: 0;
 }
 
+.mode-ring {
+  position: absolute;
+  width: 248px;
+  height: 248px;
+  pointer-events: none;
+}
+
+.mode-ring__slot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 74px;
+  height: 118px;
+  margin: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 10px;
+  border: 1px solid rgba(165, 205, 255, 0.18);
+  border-radius: 999px 999px 22px 22px;
+  background:
+    linear-gradient(180deg, rgba(36, 54, 88, 0.56), rgba(12, 19, 33, 0.72));
+  box-shadow:
+    inset 0 1px 0 rgba(236, 244, 255, 0.12),
+    inset 0 0 0 1px rgba(120, 164, 236, 0.08),
+    0 10px 24px rgba(1, 6, 14, 0.12);
+  cursor: pointer;
+  pointer-events: auto;
+  backdrop-filter: blur(8px);
+}
+
+.mode-ring__slot--active {
+  border-color: rgba(174, 220, 255, 0.38);
+  background:
+    radial-gradient(circle at 50% 18%, rgba(192, 228, 255, 0.24), transparent 42%),
+    linear-gradient(180deg, rgba(58, 90, 144, 0.9), rgba(24, 39, 64, 0.95));
+  box-shadow:
+    inset 0 1px 0 rgba(247, 250, 255, 0.28),
+    inset 0 0 0 1px rgba(166, 210, 255, 0.2),
+    0 14px 28px rgba(20, 46, 86, 0.22);
+}
+
+.mode-ring__label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  min-height: 38px;
+  border-radius: 999px;
+  color: rgba(243, 247, 252, 0.96);
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 8px rgba(1, 5, 12, 0.24);
+}
+
 .wing-eyebrow {
   margin: 0;
   text-transform: uppercase;
@@ -413,6 +497,7 @@ export default {
     inset 0 0 0 2px rgba(223, 236, 255, 0.34),
     inset 0 14px 24px rgba(178, 212, 255, 0.08),
     0 12px 28px rgba(1, 6, 14, 0.24);
+  z-index: 2;
 }
 
 .hero-orb--button {
@@ -444,54 +529,6 @@ export default {
   font-size: 18px;
   color: rgba(242, 247, 252, 0.94);
   text-shadow: 0 2px 12px rgba(1, 5, 12, 0.32);
-}
-
-.wing-side-rail {
-  position: absolute;
-  left: 18px;
-  top: 252px;
-  width: 60px;
-  padding: 12px 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  border-radius: 28px;
-  background:
-    linear-gradient(180deg, rgba(15, 27, 46, 0.76), rgba(7, 13, 25, 0.84));
-  box-shadow:
-    inset 0 1px 0 rgba(220, 236, 255, 0.12),
-    inset 0 0 0 1px rgba(131, 171, 239, 0.12),
-    0 14px 28px rgba(2, 8, 18, 0.18);
-  backdrop-filter: blur(14px);
-  pointer-events: none;
-}
-
-.side-rail__button {
-  position: relative;
-  width: 44px;
-  height: 44px;
-  border: 0;
-  border-radius: 50%;
-  background:
-    linear-gradient(180deg, rgba(30, 44, 70, 0.78), rgba(15, 24, 40, 0.88));
-  color: rgba(238, 244, 252, 0.92);
-  font-size: 20px;
-  cursor: pointer;
-  box-shadow:
-    inset 0 1px 0 rgba(230, 240, 255, 0.2),
-    inset 0 0 0 1px rgba(122, 166, 239, 0.12),
-    0 8px 18px rgba(2, 7, 16, 0.18);
-  pointer-events: auto;
-}
-
-.side-rail__button--active {
-  background:
-    radial-gradient(circle at 30% 28%, rgba(181, 220, 255, 0.28), transparent 34%),
-    linear-gradient(180deg, rgba(45, 73, 116, 0.92), rgba(22, 37, 62, 0.96));
-  box-shadow:
-    inset 0 1px 0 rgba(244, 248, 255, 0.42),
-    inset 0 0 0 1px rgba(155, 203, 255, 0.28),
-    0 12px 24px rgba(18, 43, 82, 0.28);
 }
 
 .wing-menu {

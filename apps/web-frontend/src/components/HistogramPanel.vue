@@ -52,7 +52,7 @@ export default {
     return {
       bottom: 10,
       ComponentPadding: 0,
-      height: 90,
+      height: 128,
 
       histogram_min: 0,
       histogram_max: 65535,
@@ -170,10 +170,27 @@ export default {
 <style scoped>
 .chart-panel {
   position: absolute;
-  background-color: rgba(128, 128, 128, 0.5);
-  backdrop-filter: blur(5px);
-  border-radius: 10px; 
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(18, 28, 46, 0.92), rgba(8, 14, 24, 0.94));
+  backdrop-filter: blur(16px);
+  border-radius: 24px;
+  border: 1px solid rgba(147, 188, 255, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(241, 246, 255, 0.12),
+    inset 0 0 0 1px rgba(122, 167, 237, 0.08),
+    0 22px 40px rgba(1, 6, 14, 0.24);
   transition: width 0.2s ease;
+}
+
+.chart-panel::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 46px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(145, 186, 248, 0.34), transparent);
 }
 
 @keyframes showPanelAnimation {
@@ -203,102 +220,123 @@ export default {
 }
 
 .histogram-chart {
-  position:absolute;
-  top: 5px;
-  left: 5px;
+  position: absolute;
+  top: 42px;
+  left: 12px;
 }
 
 .dial-knob {
-  position:absolute;
-  top: 5px;
-  left: 5px;
+  position: absolute;
+  top: 42px;
+  left: 12px;
 }
 
 .buttons-container {
   display: flex;
   justify-content: space-between;
   position: absolute;
-  top: -35px;
-  left: 25%;
-  right: 25%;
+  top: 8px;
+  left: 18px;
+  right: 18px;
 }
 
 @media (max-width: 1024px) {
   .buttons-container {
-    left: 16%;
-    right: 16%;
+    left: 16px;
+    right: 16px;
   }
 }
 
 @media (max-width: 640px) {
   .buttons-container {
-    left: 10%;
-    right: 10%;
+    left: 14px;
+    right: 14px;
   }
 }
 
 .btn-Auto {
-  width: 30px;
-  height: 30px;
-
+  width: 34px;
+  height: 34px;
   user-select: none;
-  background-color: rgba(64, 64, 64, 0.5);
-  backdrop-filter: blur(5px);
-  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(147, 188, 255, 0.16);
   border-radius: 50%; 
   box-sizing: border-box;
+  color: rgba(242, 247, 252, 0.92);
+  box-shadow:
+    inset 0 1px 0 rgba(236, 243, 255, 0.16),
+    0 10px 18px rgba(1, 6, 14, 0.18);
 }
 
 .btn-Range {
-  width: 30px;
-  height: 30px;
-
+  width: 34px;
+  height: 34px;
   user-select: none;
-  background-color: rgba(64, 64, 64, 0.5);
-  backdrop-filter: blur(5px);
-  border: none;
+  background:
+    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(147, 188, 255, 0.16);
   border-radius: 50%;
   box-sizing: border-box;
-  color: white;
-  font-size: 14px;
+  color: rgba(242, 247, 252, 0.92);
+  font-size: 13px;
+  font-weight: 600;
   transition: all 0.2s ease;
+  box-shadow:
+    inset 0 1px 0 rgba(236, 243, 255, 0.16),
+    0 10px 18px rgba(1, 6, 14, 0.18);
 }
 
 .btn-Range.active-range {
-  background-color: rgba(75, 155, 250, 0.7);
-  box-shadow: 0 0 8px rgba(75, 155, 250, 0.5);
+  background:
+    linear-gradient(180deg, rgba(72, 113, 179, 0.92), rgba(26, 45, 76, 0.96));
+  border-color: rgba(173, 216, 255, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(246, 249, 255, 0.2),
+    0 0 16px rgba(90, 156, 255, 0.22);
 }
 
 .btn-Reset {
-  width: 30px;
-  height: 30px;
-
+  width: 34px;
+  height: 34px;
   user-select: none;
-  background-color: rgba(64, 64, 64, 0.5);
-  backdrop-filter: blur(5px);
-  border: none;
+  background:
+    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(147, 188, 255, 0.16);
   border-radius: 50%; 
   box-sizing: border-box;
+  box-shadow:
+    inset 0 1px 0 rgba(236, 243, 255, 0.16),
+    0 10px 18px rgba(1, 6, 14, 0.18);
 }
 
 .btn-WhiteBalance {
-  width: 30px;
-  height: 30px;
-
+  width: 34px;
+  height: 34px;
   user-select: none;
-  background-color: rgba(64, 64, 64, 0.5);
-  backdrop-filter: blur(5px);
-  border: none;
+  background:
+    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(147, 188, 255, 0.16);
   border-radius: 50%; 
   box-sizing: border-box;
+  box-shadow:
+    inset 0 1px 0 rgba(236, 243, 255, 0.16),
+    0 10px 18px rgba(1, 6, 14, 0.18);
 }
 
 .btn-Auto:active,
 .btn-Reset:active,
-.btn-WhiteBalance:active {
+.btn-WhiteBalance:active,
+.btn-Range:active {
   transform: scale(0.95); /* 点击时缩小按钮 */
-  background-color: rgba(255, 255, 255, 0.7);
+  filter: brightness(1.1);
 }
 
 </style>
-

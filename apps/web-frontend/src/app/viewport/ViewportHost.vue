@@ -45,12 +45,18 @@ export default {
     updateShellScale () {
       // Match the shell stage sizing so the underlying viewport expands with
       // wide screens and stays aligned with the overlay panels.
-      this.stageWidth = Math.max(
-        this.designMinWidth,
-        (window.innerWidth * this.designHeight) / Math.max(window.innerHeight, 1)
-      )
-      const widthScale = window.innerWidth / this.stageWidth
-      const heightScale = window.innerHeight / this.designHeight
+      const viewportWidth = Math.max(window.innerWidth, 1)
+      const viewportHeight = Math.max(window.innerHeight, 1)
+      if (viewportWidth <= 960) {
+        this.stageWidth = this.designMinWidth
+      } else {
+        this.stageWidth = Math.max(
+          this.designMinWidth,
+          (viewportWidth * this.designHeight) / viewportHeight
+        )
+      }
+      const widthScale = viewportWidth / this.stageWidth
+      const heightScale = viewportHeight / this.designHeight
       this.shellScale = Math.min(widthScale, heightScale)
     }
   }
@@ -94,5 +100,12 @@ export default {
 .viewport-host__scrim {
   pointer-events: none;
   background: transparent;
+}
+
+@media (max-width: 960px) {
+  .viewport-host__frame {
+    inset: 10px;
+    border-radius: 28px;
+  }
 }
 </style>

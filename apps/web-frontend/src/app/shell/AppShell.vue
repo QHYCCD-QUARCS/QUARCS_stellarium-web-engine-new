@@ -10,6 +10,10 @@
           :secondary-actions="[]"
           :active-action-ids="[]"
         />
+        <TargetSearch
+          v-show="showCompactSearch"
+          class="app-shell__search"
+        />
         <div class="app-shell__stage-frame" :class="{ 'app-shell__stage-frame--hidden': legacyOverlayOpen }">
           <span class="control-tag">App-Panel</span>
         </div>
@@ -68,6 +72,7 @@
             :hero-eyebrow="rightHeroEyebrow"
             :action-items="rightActions"
             :tool-items="rightTools"
+            :status-items="rightStatusItems"
             :footer-left="rightFooterButtons.left"
             :footer-right="rightFooterButtons.right"
             :footer-action="rightFooterButtons.action"
@@ -191,6 +196,7 @@ import ImageManagerPanel from '@/components/ImageManagerPanel.vue'
 import INDIDebugDialog from '@/components/indiDebugDialog.vue'
 import RPIHotspotDialog from '@/components/RPI-Hotspot.vue'
 import SchedulePanel from '@/components/SchedulePanel.vue'
+import TargetSearch from '@/components/target-search.vue'
 
 export default {
   name: 'AppShell',
@@ -218,6 +224,7 @@ export default {
       cfwConnected: false,
       mountTracking: false,
       mountParked: false,
+      mountMoving: false,
       mountSpeed: 1,
       mountLocationText: '-- / --',
       captureInProgress: false,
@@ -232,6 +239,12 @@ export default {
       focuserPositionText: '0',
       focuserFwhmText: '--',
       focuserAutoActive: false,
+      focuserBusy: false,
+      guiderError: false,
+      networkConnected: true,
+      batteryLevel: null,
+      batteryCharging: false,
+      batteryManager: null,
       selectedObjectFallback: 'No Target',
       deviceDialog: {
         visible: false,
@@ -326,6 +339,9 @@ export default {
       const active = this.activeTopActionIds.slice()
       if (this.polarAlignmentVisible) active.push('settings-polar-align')
       return active
+    },
+    showCompactSearch () {
+      return !this.isSettingsMode && !this.legacyOverlayOpen
     },
     legacyOverlayOpen () {
       const state = this.$store && this.$store.state ? this.$store.state : {}
@@ -441,38 +457,50 @@ export default {
       ]
     },
     rightTools () {
-      if (this.currentMode === 'settings') {
-        return []
-      }
-      if (this.currentMode === 'capture') {
-        return [
-          { id: 'capture-solve-sync', label: '◎', tag: 'R-Tool-1' },
-          { id: 'capture-focus', label: '⊙', tag: 'R-Tool-2' },
-          { id: 'capture-files', label: '▭', tag: 'R-Tool-3' },
-          { id: 'capture-settings', label: 'SET', tag: 'R-Tool-4' }
-        ]
-      }
-      if (this.currentMode === 'guiding') {
-        return [
-          { id: 'guiding-clear', label: '⌫', tag: 'R-Tool-1' },
-          { id: 'guiding-range', label: '↔', tag: 'R-Tool-2' },
-          { id: 'guiding-loop', label: '↻', tag: 'R-Tool-3' },
-          { id: 'guiding-settings', label: 'SET', tag: 'R-Tool-4' }
-        ]
-      }
-      if (this.currentMode === 'focus') {
-        return [
-          { id: 'focus-step-left', label: '←', tag: 'R-Tool-1' },
-          { id: 'focus-stop', label: '■', tag: 'R-Tool-2' },
-          { id: 'focus-step-right', label: '→', tag: 'R-Tool-3' },
-          { id: 'focus-loop', label: '↻', tag: 'R-Tool-4' }
-        ]
-      }
+      return []
+    },
+    rightStatusItems () {
       return [
-        { id: 'mount-solve', label: '◎', tag: 'R-Tool-1' },
-        { id: 'mount-park', label: 'P', tag: 'R-Tool-2' },
-        { id: 'mount-atmosphere', label: 'A', tag: 'R-Tool-3' },
-        { id: 'mount-landscape', label: 'L', tag: 'R-Tool-4' }
+        {
+          id: 'main-camera',
+          tag: 'R-Status-Cam',
+          iconSrc: this.resolveMainCameraStatusIcon(),
+          pillClass: ''
+        },
+        {
+          id: 'mount',
+          tag: 'R-Status-Mount',
+          iconSrc: this.resolveMountStatusIcon(),
+          pillClass: ''
+        },
+        {
+          id: 'guider',
+          tag: 'R-Status-Guide',
+          iconSrc: this.resolveGuiderStatusIcon(),
+          pillClass: ''
+        },
+        {
+          id: 'focuser',
+          tag: 'R-Status-Focus',
+          iconSrc: this.resolveFocuserStatusIcon(),
+          pillClass: ''
+        },
+        {
+          id: 'wifi',
+          tag: 'R-Status-WiFi',
+          iconSrc: this.networkConnected
+            ? require('@/assets/images/svg/ui/wifi.svg')
+            : require('@/assets/images/svg/ui/wifi_off.svg'),
+          pillClass: 'status-pill--clickable',
+          actionId: 'top-hotspot'
+        },
+        {
+          id: 'battery',
+          tag: 'R-Status-Battery',
+          icon: this.batteryIcon,
+          iconClass: this.batteryIconClass,
+          pillClass: ''
+        }
       ]
     },
     leftFooterButtons () {
@@ -619,6 +647,35 @@ export default {
     },
     focuserPanelVisible () {
       return this.currentMode === 'focus'
+    },
+    batteryIcon () {
+      if (this.batteryLevel == null) return 'mdi-battery-unknown'
+      const level = Math.round(this.batteryLevel * 100)
+      if (this.batteryCharging) {
+        if (level >= 90) return 'mdi-battery-charging-100'
+        if (level >= 70) return 'mdi-battery-charging-80'
+        if (level >= 50) return 'mdi-battery-charging-60'
+        if (level >= 30) return 'mdi-battery-charging-40'
+        return 'mdi-battery-charging-20'
+      }
+      if (level >= 95) return 'mdi-battery'
+      if (level >= 85) return 'mdi-battery-90'
+      if (level >= 75) return 'mdi-battery-80'
+      if (level >= 65) return 'mdi-battery-70'
+      if (level >= 55) return 'mdi-battery-60'
+      if (level >= 45) return 'mdi-battery-50'
+      if (level >= 35) return 'mdi-battery-40'
+      if (level >= 25) return 'mdi-battery-30'
+      if (level >= 15) return 'mdi-battery-20'
+      if (level >= 5) return 'mdi-battery-10'
+      return 'mdi-battery-alert-variant-outline'
+    },
+    batteryIconClass () {
+      if (this.batteryLevel == null) return 'status-pill__icon--offline'
+      const level = Math.round(this.batteryLevel * 100)
+      if (level <= 15) return 'status-pill__icon--error'
+      if (this.batteryCharging || level <= 35) return 'status-pill__icon--busy'
+      return 'status-pill__icon--connected'
     }
   },
   watch: {
@@ -644,12 +701,16 @@ export default {
     INDIDebugDialog,
     MountControlPanel,
     RPIHotspotDialog,
-    SchedulePanel
+    SchedulePanel,
+    TargetSearch
   },
   mounted () {
     this.updateShellScale()
     window.addEventListener('resize', this.updateShellScale, { passive: true })
+    window.addEventListener('online', this.handleBrowserNetworkChange, { passive: true })
+    window.addEventListener('offline', this.handleBrowserNetworkChange, { passive: true })
     this.registerBusListeners()
+    this.initBatteryMonitoring()
     this.$nextTick(() => {
       this.syncCaptureStateFromAdapter()
       this.syncMountStateFromAdapter()
@@ -660,11 +721,65 @@ export default {
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.updateShellScale)
+    window.removeEventListener('online', this.handleBrowserNetworkChange)
+    window.removeEventListener('offline', this.handleBrowserNetworkChange)
     this.busListeners.forEach(({ eventName, handler }) => {
       this.$bus.$off(eventName, handler)
     })
+    this.destroyBatteryMonitoring()
   },
   methods: {
+    resolveMainCameraStatusIcon () {
+      if (!this.mainCameraConnected) return require('@/assets/images/svg/ui/MainCamera-white.svg')
+      if (this.captureInProgress) return require('@/assets/images/svg/ui/MainCamera-yellow.svg')
+      return require('@/assets/images/svg/ui/MainCamera-green.svg')
+    },
+    resolveMountStatusIcon () {
+      if (!this.mountConnected) return require('@/assets/images/svg/ui/Mount-white.svg')
+      if (this.mountMoving) return require('@/assets/images/svg/ui/Mount-yellow.svg')
+      return require('@/assets/images/svg/ui/Mount-green.svg')
+    },
+    resolveGuiderStatusIcon () {
+      if (!this.guiderConnected) return require('@/assets/images/svg/ui/Guider-white.svg')
+      if (this.guiderError) return require('@/assets/images/svg/ui/Guider-red.svg')
+      if (this.guiderActive || this.guiderLoopActive) return require('@/assets/images/svg/ui/Guider-yellow.svg')
+      return require('@/assets/images/svg/ui/Guider-green.svg')
+    },
+    resolveFocuserStatusIcon () {
+      if (!this.focuserConnected) return require('@/assets/images/svg/ui/Focuser-white.svg')
+      if (this.focuserBusy || this.focuserAutoActive) return require('@/assets/images/svg/ui/Focuser-yellow.svg')
+      return require('@/assets/images/svg/ui/Focuser-green.svg')
+    },
+    handleBrowserNetworkChange () {
+      this.networkConnected = navigator.onLine !== false
+    },
+    async initBatteryMonitoring () {
+      this.handleBrowserNetworkChange()
+      if (!navigator || typeof navigator.getBattery !== 'function') return
+      try {
+        const battery = await navigator.getBattery()
+        this.batteryManager = battery
+        this.updateBatteryState()
+        battery.addEventListener('levelchange', this.updateBatteryState)
+        battery.addEventListener('chargingchange', this.updateBatteryState)
+      } catch (error) {
+        this.batteryLevel = null
+        this.batteryCharging = false
+      }
+    },
+    destroyBatteryMonitoring () {
+      const battery = this.batteryManager
+      if (!battery) return
+      battery.removeEventListener('levelchange', this.updateBatteryState)
+      battery.removeEventListener('chargingchange', this.updateBatteryState)
+      this.batteryManager = null
+    },
+    updateBatteryState () {
+      const battery = this.batteryManager
+      if (!battery) return
+      this.batteryLevel = typeof battery.level === 'number' ? battery.level : null
+      this.batteryCharging = !!battery.charging
+    },
     getFocuserLoopLabel () {
       const focuserPanel = this.$refs.focuserPanel
       return focuserPanel && focuserPanel.isLoopActive ? 'On' : 'Off'
@@ -677,10 +792,25 @@ export default {
         ['GuiderConnected', (value) => { this.guiderConnected = Number(value) !== 0 }],
         ['CFWConnected', (value) => { this.cfwConnected = Number(value) !== 0 }],
         ['CameraInExposuring', (value) => { this.captureInProgress = String(value) === 'True' }],
+        ['MountStatus', (value) => { this.mountMoving = String(value) === 'Moving' }],
+        ['ShowNetStatus', (value) => {
+          if (String(value) === 'true') this.networkConnected = true
+          else if (String(value) === 'false' || String(value) === 'abnormal') this.networkConnected = false
+        }],
         ['SetExpTime', (value) => { this.captureExpTimeLabel = this.formatExposureLabel(value) }],
         ['GuiderStatus', (value) => { this.guiderStatusText = String(value || 'Idle') }],
         ['GuiderSwitchStatus', (value) => { this.guiderActive = String(value) === 'true' }],
         ['GuiderLoopExpStatus', (value) => { this.guiderLoopActive = String(value) === 'true' }],
+        ['GuiderUpdateStatus', (value) => {
+          const numeric = Number(value)
+          this.guiderError = numeric === 2
+          this.guiderActive = numeric === 1 || numeric === 2
+        }],
+        ['GuiderStop', () => {
+          this.guiderActive = false
+          this.guiderError = false
+        }],
+        ['FocusInProgress', (value) => { this.focuserBusy = !!value }],
         ['FocusChangeSpeedSuccess', (value) => { this.focuserSpeedText = String(value) }],
         ['setRedBoxSideLength', (value) => { this.focuserRoiText = String(value) }],
         ['FocusPosition', (current) => { this.focuserPositionText = String(current) }],
@@ -717,12 +847,18 @@ export default {
       // Keep the original 1600px layout as the baseline, but let the stage
       // grow wider on extra-wide displays so the side panels can sit on the
       // actual window edges instead of staying inside a centered 16:9 frame.
-      this.stageWidth = Math.max(
-        this.designMinWidth,
-        (window.innerWidth * this.designHeight) / Math.max(window.innerHeight, 1)
-      )
-      const widthScale = window.innerWidth / this.stageWidth
-      const heightScale = window.innerHeight / this.designHeight
+      const viewportWidth = Math.max(window.innerWidth, 1)
+      const viewportHeight = Math.max(window.innerHeight, 1)
+      if (viewportWidth <= 960) {
+        this.stageWidth = this.designMinWidth
+      } else {
+        this.stageWidth = Math.max(
+          this.designMinWidth,
+          (viewportWidth * this.designHeight) / viewportHeight
+        )
+      }
+      const widthScale = viewportWidth / this.stageWidth
+      const heightScale = viewportHeight / this.designHeight
       this.shellScale = Math.min(widthScale, heightScale)
     },
     formatExposureLabel (value) {
@@ -743,6 +879,7 @@ export default {
       this.guiderExpTimeMs = guiderPanel.ExpTime
       this.guiderLoopActive = guiderPanel.isLoopping
       this.guiderActive = guiderPanel.isGuiding
+      this.guiderError = !!guiderPanel.hasError
       this.guiderStatusText = guiderPanel.CurrentGuiderStatus || this.guiderStatusText
     },
     syncFocuserStateFromAdapter () {
@@ -753,6 +890,7 @@ export default {
       this.focuserPositionText = String(focuserPanel.CurrentPosition)
       this.focuserFwhmText = String(focuserPanel.FWHM)
       this.focuserAutoActive = !!focuserPanel.inAutoFocus
+      this.focuserBusy = !!focuserPanel.isMoveInProgress || !!focuserPanel.inAutoFocus
     },
     syncMountStateFromAdapter () {
       const mountPanel = this.$refs.mountPanel
@@ -760,6 +898,7 @@ export default {
       this.mountSpeed = mountPanel.MountSpeed
       this.mountTracking = !!mountPanel.TrackSwitch
       this.mountParked = !!mountPanel.ParkSwitch
+      this.mountMoving = !!mountPanel.isMoving
     },
     closeAllAuxModules () {
       this.showSchedulePanel = false
@@ -1089,6 +1228,10 @@ export default {
       }
     },
     handleToolAction (actionId) {
+      if (actionId === 'top-hotspot') {
+        this.handleTopAction('top-hotspot')
+        return
+      }
       if (actionId === 'mount-solve') {
         this.safeInvoke(this.$refs.mountPanel, 'handleSolveSYNC')
       } else if (actionId === 'mount-park') {
@@ -1237,10 +1380,21 @@ export default {
 }
 
 .app-shell__top,
+.app-shell__search,
 .app-shell__left,
 .app-shell__right,
 .app-shell__bottom {
   pointer-events: auto;
+}
+
+.app-shell__search {
+  position: absolute;
+  top: 54px;
+  left: 50%;
+  z-index: 255;
+  width: min(360px, calc(100% - 560px));
+  min-width: 220px;
+  transform: translateX(-50%);
 }
 
 .app-shell__stage-frame {
@@ -1321,6 +1475,7 @@ export default {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  z-index: 2;
 }
 
 .app-shell__overlay-layer--hidden {
@@ -1330,6 +1485,7 @@ export default {
 
 .app-shell__overlay-panel {
   pointer-events: auto;
+  z-index: 3;
 }
 
 .app-shell__overlay-panel--guiding {
@@ -1380,5 +1536,68 @@ export default {
 .app-shell__bottom--hidden {
   opacity: 0;
   pointer-events: none;
+}
+
+.app-shell__search::v-deep(.tsearch) {
+  width: 100%;
+}
+
+.app-shell__search::v-deep([data-testid="ui-skysource-search-root"]) {
+  width: 100%;
+}
+
+.app-shell__search::v-deep(.v-input) {
+  margin-top: 0;
+}
+
+.app-shell__search::v-deep(.v-input__slot) {
+  min-height: 42px !important;
+  padding: 0 14px !important;
+  border-radius: 18px !important;
+  background: rgba(7, 16, 30, 0.56) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(234, 243, 255, 0.12),
+    inset 0 0 0 1px rgba(134, 177, 248, 0.18),
+    0 12px 28px rgba(1, 6, 14, 0.18) !important;
+  backdrop-filter: blur(14px);
+}
+
+.app-shell__search::v-deep(.v-text-field__slot input),
+.app-shell__search::v-deep(.v-label),
+.app-shell__search::v-deep(.v-input__prepend-inner .v-icon) {
+  color: rgba(240, 246, 252, 0.9) !important;
+}
+
+.app-shell__search::v-deep(.v-list) {
+  margin-top: 8px;
+  border-radius: 18px;
+  background: rgba(8, 15, 27, 0.88) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(132, 176, 247, 0.16),
+    0 18px 36px rgba(1, 5, 12, 0.24);
+  backdrop-filter: blur(16px);
+}
+
+.app-shell__search::v-deep(.v-list-item) {
+  min-height: 56px;
+}
+
+@media (max-width: 960px) {
+  .app-shell__stage-frame,
+  .app-shell__settings-backdrop {
+    inset: 10px;
+    border-radius: 28px;
+  }
+
+  .app-shell__body {
+    inset: 10px;
+    gap: 8px;
+  }
+
+  .app-shell__search {
+    top: 58px;
+    width: min(320px, calc(100% - 80px));
+    min-width: 0;
+  }
 }
 </style>

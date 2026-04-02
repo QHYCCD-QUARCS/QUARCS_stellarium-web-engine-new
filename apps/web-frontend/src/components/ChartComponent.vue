@@ -93,7 +93,7 @@ export default {
     return {
       bottom: 10,
       ComponentPadding: 0,
-      height: 90,
+      height: 132,
       ExpTime: 1000,
       isGuiding: false,
       isLoopping: false,
@@ -356,11 +356,27 @@ export default {
 <style scoped>
 .chart-panel {
   position: absolute;
-  background-color: rgba(64, 64, 64, 0.5);
-  backdrop-filter: blur(5px);
-  border-radius: 10px;
-  border: 4px solid rgba(128, 128, 128, 0.5);
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(18, 28, 46, 0.92), rgba(8, 14, 24, 0.94));
+  backdrop-filter: blur(16px);
+  border-radius: 24px;
+  border: 1px solid rgba(147, 188, 255, 0.16);
   box-sizing: border-box;
+  box-shadow:
+    inset 0 1px 0 rgba(241, 246, 255, 0.12),
+    inset 0 0 0 1px rgba(122, 167, 237, 0.08),
+    0 22px 40px rgba(1, 6, 14, 0.24);
+}
+
+.chart-panel::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(145, 186, 248, 0.34), transparent);
 }
 
 @keyframes showPanelAnimation {
@@ -390,60 +406,78 @@ export default {
 }
 
 .line-chart {
-  position:absolute;
-  bottom: 1px;
-  left: 5px;
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
 }
 
 .scatter-chart {
-  position:absolute;
-  top: 1px;
-  right: 0px;
+  position: absolute;
+  top: 58px;
+  right: 8px;
 }
 
 .buttons-container {
   display: flex;
   justify-content: space-between;
   position: absolute;
-  top: -39px;
-  left: 5px;
-  right: 5px;
+  top: 8px;
+  left: 14px;
+  right: 14px;
 }
 
 .btn-Style {
-  width: 30px;
-  height: 30px; 
-
+  width: 34px;
+  height: 34px;
   user-select: none;
-  background-color: rgba(64, 64, 64, 0.5);
-  backdrop-filter: blur(5px);
-  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(147, 188, 255, 0.16);
   border-radius: 50%; 
   box-sizing: border-box;
+  box-shadow:
+    inset 0 1px 0 rgba(236, 243, 255, 0.16),
+    0 10px 18px rgba(1, 6, 14, 0.18);
 }
 
 .btn-LoopExp-false {
-  width: 30px;
-  height: 30px; 
-
+  width: 34px;
+  height: 34px;
   user-select: none;
-  background-color: rgba(64, 64, 64, 0.5);
-  backdrop-filter: blur(5px);
-  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(147, 188, 255, 0.16);
   border-radius: 50%; 
   box-sizing: border-box;
+  box-shadow:
+    inset 0 1px 0 rgba(236, 243, 255, 0.16),
+    0 10px 18px rgba(1, 6, 14, 0.18);
 }
 
 .btn-LoopExp-true {
-  width: 30px;
-  height: 30px; 
-
+  width: 34px;
+  height: 34px;
   user-select: none;
-  background-color: rgba(64, 64, 64, 0.5);
-  backdrop-filter: blur(5px);
-  /* border: none; */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(180deg, rgba(52, 93, 146, 0.92), rgba(20, 37, 62, 0.96));
+  backdrop-filter: blur(10px);
   border-radius: 50%; 
   box-sizing: border-box;
+  border: 1px solid rgba(166, 208, 255, 0.28);
+  box-shadow:
+    inset 0 1px 0 rgba(244, 248, 255, 0.18),
+    0 0 14px rgba(88, 152, 255, 0.18);
 
   animation: Animation_true infinite;
 }
@@ -458,34 +492,38 @@ export default {
 }
 
 .btn-InGuiding {
-  border: 1px solid rgba(51, 218, 121, 1);
+  border: 1px solid rgba(51, 218, 121, 0.95);
+  box-shadow: 0 0 16px rgba(51, 218, 121, 0.16);
 }
 
 .btn-InSelecting {
   border: 1px solid rgba(120, 170, 255, 0.95);
+  box-shadow: 0 0 16px rgba(120, 170, 255, 0.16);
 }
 
 .btn-InCalibration {
   border: 1px solid rgba(255, 165, 0, 1);
+  box-shadow: 0 0 16px rgba(255, 165, 0, 0.18);
 }
 
 .btn-StarLostAlert {
   border: 1px solid rgba(255, 0, 0, 1);
+  box-shadow: 0 0 16px rgba(255, 0, 0, 0.18);
 }
 
 .btn-Ready {
   border: 1px solid rgba(120, 170, 255, 0.95);
+  box-shadow: 0 0 16px rgba(120, 170, 255, 0.16);
 }
 
 .btn-null {
-  border: none;
+  border-color: rgba(147, 188, 255, 0.16);
 }
 
 .btn-Guider:active,
 .btn-Style:active {
   transform: scale(0.95); /* 点击时缩小按钮 */
-  background-color: rgba(255, 255, 255, 0.7);
+  filter: brightness(1.1);
 }
 
 </style>
-

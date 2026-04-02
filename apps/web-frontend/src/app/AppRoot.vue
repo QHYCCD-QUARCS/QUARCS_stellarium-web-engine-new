@@ -21,8 +21,9 @@ export default {
 <style>
 .app-root {
   position: relative;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
   background:
     radial-gradient(circle at top, rgba(22, 40, 68, 0.45), transparent 42%),
