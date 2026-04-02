@@ -17,6 +17,9 @@
       </section>
 
       <section class="wing-center-actions">
+        <div v-if="actionItems.length" class="wing-actions-card">
+          <div class="wing-actions-card__title">Actions</div>
+        </div>
         <button
           v-for="(item, index) in actionItems"
           :key="item.id"
@@ -38,7 +41,7 @@
           v-for="status in statusItems"
           :key="status.id"
           class="status-pill"
-          :class="status.pillClass"
+          :class="[status.pillClass, status.tone ? `status-pill--${status.tone}` : '']"
           type="button"
           @click="status.actionId ? $emit('tool-action', status.actionId) : null"
         >
@@ -466,6 +469,14 @@ export default {
   pointer-events: none;
 }
 
+.wing-actions-card {
+  display: none;
+}
+
+.wing-actions-card__title {
+  display: none;
+}
+
 .orb-button {
   position: absolute;
   width: 58px;
@@ -507,15 +518,15 @@ export default {
 
 .wing-side-status {
   position: absolute;
-  right: 14px;
-  top: 240px;
-  width: 68px;
-  padding: 12px 10px;
+  right: 8px;
+  top: 244px;
+  width: 58px;
+  padding: 10px 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  border-radius: 32px;
+  gap: 8px;
+  border-radius: 22px;
   background:
     linear-gradient(180deg, rgba(15, 27, 46, 0.8), rgba(7, 13, 25, 0.9));
   box-shadow:
@@ -528,8 +539,8 @@ export default {
 
 .status-pill {
   position: relative;
-  width: 46px;
-  height: 46px;
+  width: 42px;
+  height: 42px;
   border: 0;
   border-radius: 50%;
   background:
@@ -543,18 +554,19 @@ export default {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
   pointer-events: auto;
 }
 
 .status-pill__icon-image {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   object-fit: contain;
   pointer-events: none;
 }
 
 .status-pill__icon {
-  font-size: 24px !important;
+  font-size: 22px !important;
 }
 
 .status-pill__icon--connected {
@@ -575,6 +587,27 @@ export default {
 
 .status-pill--clickable:active {
   transform: scale(0.97);
+}
+
+.status-pill--connected {
+  box-shadow:
+    inset 0 1px 0 rgba(230, 240, 255, 0.2),
+    inset 0 0 0 1px rgba(82, 187, 126, 0.22),
+    0 8px 18px rgba(2, 7, 16, 0.18);
+}
+
+.status-pill--busy {
+  box-shadow:
+    inset 0 1px 0 rgba(230, 240, 255, 0.2),
+    inset 0 0 0 1px rgba(240, 191, 92, 0.24),
+    0 8px 18px rgba(2, 7, 16, 0.18);
+}
+
+.status-pill--error {
+  box-shadow:
+    inset 0 1px 0 rgba(230, 240, 255, 0.2),
+    inset 0 0 0 1px rgba(255, 109, 109, 0.26),
+    0 8px 18px rgba(2, 7, 16, 0.18);
 }
 
 .wing-footer {
@@ -631,18 +664,7 @@ export default {
 }
 
 .control-tag {
-  position: absolute;
-  z-index: 3;
-  padding: 1px 4px;
-  border-radius: 999px;
-  background: rgba(123, 74, 226, 0.14);
-  color: rgba(193, 150, 255, 0.98);
-  font-size: 7px;
-  line-height: 1.2;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-  pointer-events: none;
-  border: 1px solid rgba(170, 111, 255, 0.34);
+  display: none !important;
 }
 
 .control-tag--panel {
@@ -667,6 +689,21 @@ export default {
 .control-tag--orb,
 .control-tag--caption {
   top: -12px;
+}
+
+@media (max-width: 960px) {
+  .wing-side-status {
+    right: 6px;
+    top: 238px;
+    width: 54px;
+    padding: 8px 5px;
+    gap: 7px;
+  }
+
+  .status-pill {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 </style>

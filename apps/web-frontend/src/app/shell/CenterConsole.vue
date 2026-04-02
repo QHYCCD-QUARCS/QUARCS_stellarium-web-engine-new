@@ -158,20 +158,7 @@ export default {
 }
 
 .control-tag {
-  position: absolute;
-  left: 0;
-  top: -10px;
-  z-index: 2;
-  padding: 1px 4px;
-  border-radius: 999px;
-  background: rgba(123, 74, 226, 0.14);
-  color: rgba(193, 150, 255, 0.98);
-  font-size: 7px;
-  line-height: 1.2;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-  pointer-events: none;
-  border: 1px solid rgba(170, 111, 255, 0.34);
+  display: none !important;
 }
 
 .control-tag--panel {

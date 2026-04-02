@@ -464,30 +464,45 @@ export default {
         {
           id: 'main-camera',
           tag: 'R-Status-Cam',
+          title: this.$t('Main Camera'),
+          value: this.captureInProgress ? this.$t('Capturing') : (this.mainCameraConnected ? this.$t('Ready') : this.$t('Offline')),
+          tone: this.captureInProgress ? 'busy' : (this.mainCameraConnected ? 'connected' : 'offline'),
           iconSrc: this.resolveMainCameraStatusIcon(),
           pillClass: ''
         },
         {
           id: 'mount',
           tag: 'R-Status-Mount',
+          title: this.$t('Mount'),
+          value: this.mountMoving ? this.$t('Slewing') : (this.mountTracking ? this.$t('Tracking') : (this.mountConnected ? this.$t('Ready') : this.$t('Offline'))),
+          tone: this.mountMoving ? 'busy' : (this.mountConnected ? 'connected' : 'offline'),
           iconSrc: this.resolveMountStatusIcon(),
           pillClass: ''
         },
         {
           id: 'guider',
           tag: 'R-Status-Guide',
+          title: this.$t('Guider'),
+          value: this.guiderError ? this.$t('Alert') : this.guiderStatusLabel,
+          tone: this.guiderError ? 'error' : this.guiderTone,
           iconSrc: this.resolveGuiderStatusIcon(),
           pillClass: ''
         },
         {
           id: 'focuser',
           tag: 'R-Status-Focus',
+          title: this.$t('Focus'),
+          value: this.focuserAutoActive ? this.$t('Auto') : (this.focuserBusy ? this.$t('Moving') : (this.focuserConnected ? this.$t('Ready') : this.$t('Offline'))),
+          tone: (this.focuserBusy || this.focuserAutoActive) ? 'busy' : (this.focuserConnected ? 'connected' : 'offline'),
           iconSrc: this.resolveFocuserStatusIcon(),
           pillClass: ''
         },
         {
           id: 'wifi',
           tag: 'R-Status-WiFi',
+          title: 'WiFi',
+          value: this.networkConnected ? this.$t('Online') : this.$t('Offline'),
+          tone: this.networkConnected ? 'connected' : 'offline',
           iconSrc: this.networkConnected
             ? require('@/assets/images/svg/ui/wifi.svg')
             : require('@/assets/images/svg/ui/wifi_off.svg'),
@@ -497,6 +512,9 @@ export default {
         {
           id: 'battery',
           tag: 'R-Status-Battery',
+          title: this.$t('Battery'),
+          value: this.batteryLabel,
+          tone: this.batteryTone,
           icon: this.batteryIcon,
           iconClass: this.batteryIconClass,
           pillClass: ''
@@ -676,6 +694,41 @@ export default {
       if (level <= 15) return 'status-pill__icon--error'
       if (this.batteryCharging || level <= 35) return 'status-pill__icon--busy'
       return 'status-pill__icon--connected'
+    },
+    batteryLabel () {
+      if (this.batteryLevel == null) return this.$t('Unknown')
+      const level = Math.round(this.batteryLevel * 100)
+      return this.batteryCharging ? `${level}% · ${this.$t('Charging')}` : `${level}%`
+    },
+    batteryTone () {
+      if (this.batteryLevel == null) return 'offline'
+      const level = Math.round(this.batteryLevel * 100)
+      if (level <= 15) return 'error'
+      if (this.batteryCharging || level <= 35) return 'busy'
+      return 'connected'
+    },
+    guiderStatusLabel () {
+      if (!this.guiderConnected) return this.$t('Offline')
+      if (this.guiderActive) return this.$t('Guiding')
+      if (this.guiderLoopActive) return this.$t('Looping')
+      const status = String(this.guiderStatusText || '').trim()
+      const map = {
+        InGuiding: this.$t('Guiding'),
+        InSelecting: this.$t('Selecting'),
+        InCalibration: this.$t('Calibrating'),
+        InDirectionDetection: this.$t('Detecting'),
+        StarLostAlert: this.$t('Star Lost'),
+        Connected: this.$t('Ready'),
+        null: this.$t('Idle'),
+        Idle: this.$t('Idle')
+      }
+      return map[status] || status || this.$t('Idle')
+    },
+    guiderTone () {
+      if (!this.guiderConnected) return 'offline'
+      if (this.guiderError) return 'error'
+      if (this.guiderActive || this.guiderLoopActive) return 'busy'
+      return 'connected'
     }
   },
   watch: {
@@ -1432,21 +1485,7 @@ export default {
 }
 
 .control-tag {
-  position: absolute;
-  left: 50%;
-  top: 10px;
-  transform: translateX(-50%);
-  z-index: 2;
-  padding: 1px 4px;
-  border-radius: 999px;
-  background: rgba(123, 74, 226, 0.14);
-  color: rgba(193, 150, 255, 0.98);
-  font-size: 7px;
-  line-height: 1.2;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-  pointer-events: none;
-  border: 1px solid rgba(170, 111, 255, 0.34);
+  display: none !important;
 }
 
 .app-shell__body {
