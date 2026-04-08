@@ -1425,6 +1425,7 @@ export default {
       mountSerialPortSelected: 'default',
       focuserSerialPortItems: [],
       focuserSerialPortSelected: 'default',
+      shellDeviceDialogType: '',
       cpuTemp: null,  // CPU温度
       cpuUsage: null, // CPU使用率
 
@@ -1459,6 +1460,12 @@ export default {
   created() {
     this.$bus.$on('AppSendMessage', this.sendMessage);
     this.$bus.$on('AppUpdateDevices', this.updateDevices);
+    this.$bus.$on('ShellSelectDevice', this.openDeviceFromShell);
+    this.$bus.$on('ShellOpenDeviceDialog', this.openShellDeviceDialog);
+    this.$bus.$on('ShellCloseDeviceDialog', this.closeShellDeviceDialog);
+    this.$bus.$on('ShellDeviceDialogAction', this.handleShellDeviceDialogAction);
+    this.$bus.$on('ShellConnectAllDevices', this.connectAllDevice);
+    this.$bus.$on('ShellDisconnectAllDevices', this.disconnectAllDevicesFromShell);
     this.$bus.$on('Switch-MainPage', this.handleButtonTestClick);
     this.$bus.$on('HandleHistogramNum', this.applyHistStretch);
     this.$bus.$on('ImageGainR', this.ImageGainSet);
@@ -4550,12 +4557,39 @@ export default {
       this.sendMessage('Broadcast_Msg', 'CloseWebView');
     },
 
-    selectDevice(device) {
+    openDeviceFromShell(payload) {
+      const request = (payload && typeof payload === 'object')
+        ? payload
+        : { driverType: payload, preferConfig: false };
+      const targetType = String(request.driverType || '').trim();
+      if (!targetType) return;
+      const device = this.devices.find(item => item && item.driverType === targetType);
+      if (!device) {
+        this.callShowMessageBox('The device entry was not found.', 'error');
+        return;
+      }
+      if (request.preferConfig && device.isConnected && device.dialogStateVar) {
+        this.isOpenDevicePage = false;
+        this.isOpenPowerPage = false;
+        this.drawer_2 = false;
+        this.$store.commit('setValue', { varName: 'showNavigationDrawer', newValue: false });
+        this.$store.commit('setValue', { varName: device.dialogStateVar, newValue: true });
+        return;
+      }
+      this.$store.commit('setValue', { varName: 'showNavigationDrawer', newValue: true });
+      this.selectDevice(device);
+    },
+
+    disconnectAllDevicesFromShell() {
+      this.disconnectAllDevice(false);
+    },
+
+    prepareDeviceSelectionState(device, options = {}) {
       if (!this.haveDeviceConnect || (this.haveDeviceConnect) || device.driverType === 'Telescopes') {
         this.isOpenDevicePage = true;
         this.isOpenPowerPage = false;
 
-        if (device.isget === false) {
+        if (device.isget === false && device.type && device.ListNum !== undefined) {
           // device.isget = true;
           this.sendMessage('Vue_Command', 'SelectIndiDriver:' + device.type + ":" + device.ListNum);
           this.drivers = [];
@@ -4568,7 +4602,7 @@ export default {
           this.DeviceIsConnected = true;
         }
 
-        this.drawer_2 = true;
+        this.drawer_2 = options.showLegacyDrawer !== false;
 
         this.ToBeConnectDevice = [];
         this.devicesList.forEach(devicesList => {
@@ -4576,19 +4610,43 @@ export default {
             this.ToBeConnectDevice.push(devicesList);
           }
         });
+        return true;
       } else {
         this.callShowMessageBox('The device is not connected.', 'error');
+        return false;
       }
-
+    },
+    selectDevice(device) {
+      this.prepareDeviceSelectionState(device, { showLegacyDrawer: true });
     },
 
-    CurrentConfigItems() {
-      console.log('CurrentConfigItems: ', this.CurrentDriverType + 'ConfigItems');
-      switch (this.CurrentDriverType) {
+    openShellDeviceDialog(payload) {
+      const request = (payload && typeof payload === 'object')
+        ? payload
+        : { driverType: payload };
+      const targetType = String(request.driverType || '').trim();
+      if (!targetType) return;
+      const device = this.devices.find(item => item && item.driverType === targetType);
+      if (!device) {
+        this.callShowMessageBox('The device entry was not found.', 'error');
+        return;
+      }
+      this.shellDeviceDialogType = targetType;
+      this.drawer_2 = false;
+      this.$store.commit('setValue', { varName: 'showNavigationDrawer', newValue: false });
+      if (!this.prepareDeviceSelectionState(device, { showLegacyDrawer: false })) return;
+      this.emitShellDeviceDialogState(targetType);
+    },
+
+    closeShellDeviceDialog() {
+      this.shellDeviceDialogType = '';
+    },
+
+    getConfigItemsByDriverType(driverType) {
+      switch (driverType) {
         case 'Guider':
           return this.GuiderConfigItems;
         case 'MainCamera':
-          // 仅当主相机=QHY 且连接模式=SDK 时，才展示 Burst 相关配置
           {
             const dev = (this.devices || []).find(d => d && d.driverType === 'MainCamera') || {};
             const driverName = String(dev.driverName || '');
@@ -4610,6 +4668,125 @@ export default {
         default:
           return [];
       }
+    },
+
+    CurrentConfigItems() {
+      console.log('CurrentConfigItems: ', this.CurrentDriverType + 'ConfigItems');
+      return this.getConfigItemsByDriverType(this.CurrentDriverType);
+    },
+
+    cloneShellConfigItems(items) {
+      return (items || []).map((item, index) => ({
+        index,
+        driverType: item.driverType,
+        label: item.label,
+        value: item.value,
+        inputType: item.inputType,
+        inputMin: item.inputMin,
+        inputMax: item.inputMax,
+        inputStep: item.inputStep,
+        min: item.min,
+        max: item.max,
+        step: item.step,
+        selectValue: Array.isArray(item.selectValue) ? item.selectValue.slice() : [],
+        buttonText: item.buttonText,
+        buttonTextWhenDisabled: item.buttonTextWhenDisabled,
+        isCfwMenuControl: !!item.isCfwMenuControl,
+        _disabled: !!item._disabled
+      }));
+    },
+
+    emitShellDeviceDialogState(driverType = '') {
+      const activeType = String(driverType || this.shellDeviceDialogType || '').trim();
+      if (!activeType) return;
+      const currentDevice = (this.devices || []).find(device => device && device.driverType === activeType);
+      if (!currentDevice) return;
+
+      const usingCurrentContext = this.CurrentDriverType === activeType;
+      const serialPortItems = activeType === 'Mount'
+        ? this.mountSerialPortItems
+        : (activeType === 'Focuser' ? this.focuserSerialPortItems : []);
+      const selectedSerialPort = activeType === 'Mount'
+        ? this.mountSerialPortSelected
+        : (activeType === 'Focuser' ? this.focuserSerialPortSelected : 'default');
+
+      this.$bus.$emit('ShellDeviceDialogState', {
+        driverType: activeType,
+        displayName: currentDevice.name || activeType,
+        connected: !!currentDevice.isConnected || activeType === 'Telescopes',
+        supportsConnectionControls: !!currentDevice.type,
+        drivers: (this.drivers || []).map(item => ({
+          label: item && item.label ? item.label : String((item && item.value) || item || ''),
+          value: item && item.value !== undefined ? item.value : (item && item.label ? item.label : item)
+        })),
+        selectedDriver: usingCurrentContext ? this.selectedDriver : (currentDevice.driverName || ''),
+        showConnectionModeSelector: usingCurrentContext ? this.showConnectionModeSelector : false,
+        connectionModeItems: usingCurrentContext ? this.connectionModeItemsForCurrentDevice : [],
+        selectedConnectionMode: usingCurrentContext ? this.selectedConnectionMode : (currentDevice.connectionMode || 'INDI'),
+        baudRateItems: (this.BaudRateItems || []).map(item => ({ label: item.label, value: item.value })),
+        selectedBaudRate: usingCurrentContext ? this.BaudRateSelected : (currentDevice.BaudRate || 9600),
+        serialPortItems: (serialPortItems || []).map(item => ({ label: item.label, value: item.value })),
+        selectedSerialPort,
+        isConnecting: !!this.isConnecting,
+        boundDeviceName: currentDevice.device || '',
+        isUnbound: usingCurrentContext ? this.isCurrentDeviceUnbound : false,
+        configItems: this.cloneShellConfigItems(this.getConfigItemsByDriverType(activeType))
+      });
+    },
+
+    findShellConfigItem(payload) {
+      const items = this.getConfigItemsByDriverType(this.CurrentDriverType);
+      const targetItem = payload && payload.item ? payload.item : {};
+      const targetIndex = Number(targetItem.index);
+      if (Number.isInteger(targetIndex) && items[targetIndex]) {
+        return items[targetIndex];
+      }
+      return items.find(item => item && item.label === targetItem.label);
+    },
+
+    handleShellDeviceDialogAction(payload) {
+      if (!payload || typeof payload !== 'object') return;
+      const requestedType = String(payload.driverType || this.CurrentDriverType || '').trim();
+      if (requestedType && this.CurrentDriverType !== requestedType) {
+        const targetDevice = (this.devices || []).find(device => device && device.driverType === requestedType);
+        if (targetDevice) {
+          this.prepareDeviceSelectionState(targetDevice, { showLegacyDrawer: false });
+        }
+      }
+
+      if (payload.type === 'select-driver') {
+        this.selectedDriver = payload.value;
+        this.confirmDriver();
+      } else if (payload.type === 'select-connection-mode') {
+        this.selectedConnectionMode = payload.value;
+        this.onConnectionModeChange(payload.value);
+      } else if (payload.type === 'select-baud-rate') {
+        this.BaudRateSelected = payload.value;
+        this.confirmDriver();
+      } else if (payload.type === 'select-serial-port') {
+        if (requestedType === 'Mount') this.mountSerialPortSelected = payload.value;
+        if (requestedType === 'Focuser') this.focuserSerialPortSelected = payload.value;
+        this.onSerialPortSelect(requestedType, payload.value);
+      } else if (payload.type === 'connect') {
+        this.connectDriver();
+      } else if (payload.type === 'disconnect') {
+        this.disconnectDriver();
+      } else if (payload.type === 'clear-driver') {
+        this.clearDriver();
+      } else if (payload.type === 'config-change') {
+        const item = this.findShellConfigItem(payload);
+        if (item) {
+          this.$set(item, 'value', payload.value);
+          this.handleConfigChange(item.label, item.value, item.driverType || requestedType);
+        }
+      } else if (payload.type === 'config-button') {
+        const item = this.findShellConfigItem(payload);
+        if (item) this.onButtonPress(item);
+      }
+
+      this.$nextTick(() => {
+        this.emitShellDeviceDialogState(requestedType);
+      });
     },
 
     confirmDriver() {
@@ -4720,6 +4897,10 @@ export default {
         this.callShowMessageBox(shownName + ' success connected', 'success');
       }
       this.haveDeviceConnect = true;
+      if (this.CurrentDriverType === type) {
+        this.DeviceIsConnected = true;
+      }
+      this.emitShellDeviceDialogState(type);
       // 注释掉：不再在单个设备连接成功时关闭进度条，等待全部连接完成消息
       // this.loadingConnectAllDevice = false;
 
@@ -9759,6 +9940,7 @@ export default {
       }
 
       this.stopLoading();
+      this.emitShellDeviceDialogState(devicetype);
     },
     connectDriverFailed(message, deviceType = '') {
       console.log('connectDriverFailed:', message, deviceType);
@@ -9783,6 +9965,7 @@ export default {
       // 关闭连接状态和进度条
       this.isConnecting = false;
       this.stopLoading();
+      this.emitShellDeviceDialogState(deviceType);
     },
     disconnectDriver() {
       const DeviceType = this.CurrentDriverType;
@@ -9843,7 +10026,9 @@ export default {
       // 恢复选中驱动：断开后保持驱动选择不变，方便用户重新连接
       if (this.CurrentDriverType === devicetype) {
         this.updateSelectedDriver(devicetype);
+        this.DeviceIsConnected = false;
       }
+      this.emitShellDeviceDialogState(devicetype);
     },
 
     disconnectDriverFail(devicetype) {
@@ -9859,6 +10044,7 @@ export default {
         this.$bus.$emit('GuiderConnected', 0);
         this.clearDeviceList();
         this.$bus.$emit('deleteDeviceTypeAllocationList', 'all');
+        this.emitShellDeviceDialogState();
         return;
       };
 
@@ -9897,7 +10083,9 @@ export default {
       // 恢复选中驱动：断开后保持驱动选择不变，方便用户重新连接
       if (this.CurrentDriverType === devicetype) {
         this.updateSelectedDriver(devicetype);
+        this.DeviceIsConnected = false;
       }
+      this.emitShellDeviceDialogState(devicetype);
     },
     // 兼容处理 SelectedDriverList（旧/新协议）
     // - 旧：SelectedDriverList:Desc1:Driver1:Desc2:Driver2:...
@@ -11344,6 +11532,24 @@ export default {
     },
   },
   watch: {
+    drivers: {
+      deep: true,
+      handler() {
+        this.emitShellDeviceDialogState();
+      }
+    },
+    mountSerialPortItems: {
+      deep: true,
+      handler() {
+        this.emitShellDeviceDialogState();
+      }
+    },
+    focuserSerialPortItems: {
+      deep: true,
+      handler() {
+        this.emitShellDeviceDialogState();
+      }
+    },
     /** 主菜单关闭时同步关闭子菜单状态，避免 E2E 再次打开主菜单时误判“子菜单已打开”而跳过点击 */
     '$store.state.showNavigationDrawer': function (isOpen) {
       if (!isOpen) {
@@ -11374,15 +11580,28 @@ export default {
       // 当 CurrentDriverType 变化时，更新 selectedDriver
       this.updateSelectedDriver(newVal);
       this.bumpSubmenuRender();
+      this.emitShellDeviceDialogState(newVal);
     },
     selectedDriver() {
       this.bumpSubmenuRender();
+      this.emitShellDeviceDialogState();
     },
     DeviceIsConnected() {
       this.bumpSubmenuRender();
+      this.emitShellDeviceDialogState();
     },
     selectedConnectionMode() {
       this.bumpSubmenuRender();
+      this.emitShellDeviceDialogState();
+    },
+    mountSerialPortSelected() {
+      this.emitShellDeviceDialogState();
+    },
+    focuserSerialPortSelected() {
+      this.emitShellDeviceDialogState();
+    },
+    isConnecting() {
+      this.emitShellDeviceDialogState();
     }
   },
   mounted: function () {

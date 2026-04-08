@@ -7,13 +7,14 @@
     <div class="bottom-dock__tabs">
       <button
         v-for="tab in tabs"
-        :key="tab.title"
+        :key="tab.id"
         type="button"
         class="bottom-dock__tab"
-        :class="{ 'bottom-dock__tab--active': tab.title === 'Guiding' }"
+        :class="{ 'bottom-dock__tab--active': tab.id === activeTab }"
+        @click="$emit('select-tab', tab.id)"
       >
         <span class="control-tag">{{ tab.tag }}</span>
-        {{ tab.title }}
+        {{ tab.label }}
       </button>
 
       <button type="button" class="bottom-dock__toggle" @click="toggleHeightMode">
@@ -44,9 +45,9 @@
         <circle cx="322" cy="184" r="6" fill="transparent" stroke="rgba(244, 215, 121, 0.88)" stroke-width="3" />
         <circle cx="396" cy="136" r="6" fill="transparent" stroke="rgba(244, 215, 121, 0.88)" stroke-width="3" />
       </svg>
-      <div class="chart-label chart-label--a">10.11</div>
-      <div class="chart-label chart-label--b">0.99</div>
-      <div class="chart-label chart-label--c">3.84</div>
+      <div class="chart-label chart-label--a">{{ chartLabelA }}</div>
+      <div class="chart-label chart-label--b">{{ chartLabelB }}</div>
+      <div class="chart-label chart-label--c">{{ chartLabelC }}</div>
     </div>
   </section>
 </template>
@@ -56,14 +57,32 @@ import { PANEL_FOOTER_HEIGHT, PANEL_OUTLINE_Y, svgYToPanelY } from './panelLayou
 
 export default {
   name: 'BottomDock',
+  props: {
+    activeTab: {
+      type: String,
+      default: 'guiding'
+    },
+    chartLabelA: {
+      type: String,
+      default: 'RMS --'
+    },
+    chartLabelB: {
+      type: String,
+      default: 'Loop --'
+    },
+    chartLabelC: {
+      type: String,
+      default: 'State --'
+    }
+  },
   data () {
     return {
       heightMode: 'compact',
       tabs: [
-        { title: 'Guiding', tag: 'Dock-Guiding' },
-        { title: 'Focus', tag: 'Dock-Focus' },
-        { title: 'Histogram', tag: 'Dock-Hist' },
-        { title: 'Diagonal', tag: 'Dock-Diag' }
+        { id: 'guiding', label: 'Guiding', tag: 'Dock-Guiding' },
+        { id: 'focus', label: 'Focus', tag: 'Dock-Focus' },
+        { id: 'histogram', label: 'Histogram', tag: 'Dock-Hist' },
+        { id: 'diagonal', label: 'Diagonal', tag: 'Dock-Diag' }
       ]
     }
   },
@@ -88,6 +107,7 @@ export default {
   methods: {
     toggleHeightMode () {
       this.heightMode = this.isCompact ? 'expanded' : 'compact'
+      this.$emit('toggle-height', this.heightMode)
     }
   }
 }
@@ -217,21 +237,7 @@ export default {
 }
 
 .control-tag {
-  position: absolute;
-  left: 50%;
-  top: -10px;
-  transform: translateX(-50%);
-  z-index: 2;
-  padding: 1px 4px;
-  border-radius: 999px;
-  background: rgba(123, 74, 226, 0.14);
-  color: rgba(193, 150, 255, 0.98);
-  font-size: 7px;
-  line-height: 1.2;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-  pointer-events: none;
-  border: 1px solid rgba(170, 111, 255, 0.34);
+  display: none !important;
 }
 
 .control-tag--chart {

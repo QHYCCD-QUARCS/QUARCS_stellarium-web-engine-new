@@ -98,7 +98,7 @@
       </div>
 
       <div data-testid="cp-capture">
-        <CircularProgressButton class="btn-Capture" data-testid="cp-btn-capture" />
+        <CircularProgressButton ref="captureButton" class="btn-Capture" data-testid="cp-btn-capture" />
       </div>
 
       <div data-testid="cp-secondary-panels">
@@ -273,6 +273,14 @@ export default {
 
   },
   methods: {
+    triggerCapturePrimaryAction() {
+      const captureButton = this.$refs.captureButton;
+      return captureButton ? captureButton.triggerCapturePrimaryAction() : false;
+    },
+    triggerCaptureAbort() {
+      const captureButton = this.$refs.captureButton;
+      return captureButton ? captureButton.triggerAbortAction() : false;
+    },
     startCfwMoving(targetPos1) {
       this.cfwMoveTargetPos1 = targetPos1;
       this.isCFWMoving = true;

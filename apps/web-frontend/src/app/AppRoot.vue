@@ -21,8 +21,9 @@ export default {
 <style>
 .app-root {
   position: relative;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
   background:
     radial-gradient(circle at top, rgba(22, 40, 68, 0.45), transparent 42%),
@@ -50,7 +51,6 @@ export default {
  */
 .legacy-app-host {
   position: relative;
-  z-index: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -59,7 +59,6 @@ export default {
 .legacy-app-host .v-application {
   position: absolute !important;
   inset: 0;
-  z-index: 0;
   width: 100% !important;
   min-width: 0;
   max-width: 100%;
@@ -81,12 +80,9 @@ export default {
 }
 
 .legacy-app-host [data-testid="gui-root"],
-.legacy-app-host .menu-navigation-drawer,
-.legacy-app-host .submenu-navigation-drawer,
 .legacy-app-host .menu-button-above-overlay,
 .legacy-app-host .calibration-info-box,
-.legacy-app-host .auto-focus-info-box,
-.legacy-app-host .v-dialog__content {
+.legacy-app-host .auto-focus-info-box {
   display: none !important;
 }
 

@@ -157,7 +157,7 @@ export default {
       // width: 330, // 初始宽度
       bottom: 10,
       ComponentPadding: 0,
-      height: 90,
+      height: 132,
 
       MoveSteps: 50,
       MoveSpeed: 1,
@@ -256,15 +256,51 @@ export default {
     this.$bus.$emit('AppSendMessage', 'Vue_Command', 'getFocuserState');
   },
   methods: {
+    getStageMetrics() {
+      const stageEl = this.$el && this.$el.parentElement ? this.$el.parentElement : null
+      const logicalWidth = stageEl && stageEl.offsetWidth ? stageEl.offsetWidth : Math.max(window.innerWidth || 0, 320)
+      const visibleWidth = stageEl && stageEl.getBoundingClientRect
+        ? stageEl.getBoundingClientRect().width
+        : Math.max(window.innerWidth || 0, 320)
+      const scale = logicalWidth > 0 ? (visibleWidth / logicalWidth) : 1
+      return {
+        logicalWidth: Math.max(logicalWidth, 320),
+        visibleWidth: Math.max(visibleWidth, 320),
+        scale: scale > 0 ? scale : 1
+      }
+    },
+    getViewportWidth() {
+      const visualWidth = window.visualViewport && window.visualViewport.width
+        ? window.visualViewport.width
+        : 0
+      const innerWidth = window.innerWidth || 0
+      const width = visualWidth > 0 ? Math.min(innerWidth || visualWidth, visualWidth) : innerWidth
+      return Math.max(width, 320)
+    },
+    isTouchMobileViewport(screenWidth) {
+      const ua = navigator.userAgent || ''
+      const touch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0)
+      const mobileLike = /Android|iPhone|iPad|iPod|Mobile|Tablet/i.test(ua)
+      return !!touch && (mobileLike || screenWidth <= 900)
+    },
     updatePosition() {
-      const screenWidth = window.innerWidth;
-      const halfWidth = screenWidth / 2 - 250;
-      this.ComponentPadding = Math.max(halfWidth, 170);
-      // console.log('Updated Padding:', this.ComponentPadding);
+      const screenWidth = this.getViewportWidth();
+      const { logicalWidth, visibleWidth, scale } = this.getStageMetrics()
+      if (this.isTouchMobileViewport(screenWidth)) {
+        const desiredVisibleWidth = Math.min(Math.max(Math.floor(visibleWidth * 0.36), 200), visibleWidth - 210)
+        const logicalTargetWidth = Math.max(220, Math.round(desiredVisibleWidth / scale))
+        this.ComponentPadding = Math.max(Math.round((logicalWidth - logicalTargetWidth) / 2), 18)
+      } else if (screenWidth <= 1024) {
+        const widthRatio = screenWidth <= 640 ? 0.78 : 0.76;
+        const targetWidth = Math.max(220, Math.floor(screenWidth * widthRatio));
+        this.ComponentPadding = Math.max(Math.round((screenWidth - targetWidth) / 2), 12);
+      } else {
+        const halfWidth = screenWidth / 2 - 250;
+        this.ComponentPadding = Math.max(halfWidth, 170);
+      }
 
-      // 计算宽度
-      const newWidth = screenWidth - (this.ComponentPadding * 2);
-      // console.log('Update Focus Chart width:', newWidth);
+      const widthBase = this.isTouchMobileViewport(screenWidth) ? logicalWidth : screenWidth
+      const newWidth = Math.max(220, widthBase - (this.ComponentPadding * 2));
       this.$bus.$emit('updateFocusChartWidth', newWidth);
       
     },
@@ -736,12 +772,28 @@ export default {
 <style scoped>
 .chart-panel {
   position: absolute;
-  background-color: rgba(64, 64, 64, 0.5);
-  backdrop-filter: blur(5px);
-  border-radius: 10px;
-  border: 4px solid rgba(128, 128, 128, 0.5);
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(18, 28, 46, 0.92), rgba(8, 14, 24, 0.94));
+  backdrop-filter: blur(16px);
+  border-radius: 24px;
+  border: 1px solid rgba(147, 188, 255, 0.16);
   box-sizing: border-box;
   transition: width 0.2s ease;
+  box-shadow:
+    inset 0 1px 0 rgba(241, 246, 255, 0.12),
+    inset 0 0 0 1px rgba(122, 167, 237, 0.08),
+    0 22px 40px rgba(1, 6, 14, 0.24);
+}
+
+.chart-panel::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 42px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(145, 186, 248, 0.34), transparent);
 }
 
 @keyframes showPanelAnimation {
@@ -774,23 +826,23 @@ export default {
 
 .focus-chart {
   position: absolute;
-  bottom: 1px;
-  left: 5px;
+  bottom: 10px;
+  left: 12px;
 }
 
 .image-chart {
   position: absolute;
-  bottom: 1px;
-  right: 0px;
+  bottom: 10px;
+  right: 8px;
 }
 
 .buttons-container {
   display: flex;
   justify-content: space-between;
   position: absolute;
-  top: -39px;
-  left: 5px;
-  right: 5px;
+  top: 8px;
+  left: 14px;
+  right: 14px;
 }
 
 /* 自动对焦进度文本与动画：位于按钮下方，靠右对齐 */
@@ -836,63 +888,78 @@ export default {
 }
 
 .btn-Speed {
-  width: 30px;
-  height: 30px;
-
+  width: 34px;
+  height: 34px;
   user-select: none;
-  background-color: rgba(64, 64, 64, 0.5);
-  backdrop-filter: blur(5px);
-  border: none;
+  background:
+    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(147, 188, 255, 0.16);
   border-radius: 50%;
   box-sizing: border-box;
+  box-shadow:
+    inset 0 1px 0 rgba(236, 243, 255, 0.16),
+    0 10px 18px rgba(1, 6, 14, 0.18);
 }
 
 .btn-Left {
-  width: 30px;
-  height: 30px;
-
+  width: 34px;
+  height: 34px;
   user-select: none;
-  background-color: rgba(64, 64, 64, 0.5);
-  backdrop-filter: blur(5px);
-  border: none;
+  background:
+    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(147, 188, 255, 0.16);
   border-radius: 50%;
   box-sizing: border-box;
+  box-shadow:
+    inset 0 1px 0 rgba(236, 243, 255, 0.16),
+    0 10px 18px rgba(1, 6, 14, 0.18);
 }
 
 .btn-ROI {
-  width: 30px;
-  height: 30px;
-
+  width: 34px;
+  height: 34px;
   user-select: none;
-  background-color: rgba(64, 64, 64, 0.5);
-  backdrop-filter: blur(5px);
-  border: none;
+  background:
+    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(147, 188, 255, 0.16);
   border-radius: 50%;
   box-sizing: border-box;
+  box-shadow:
+    inset 0 1px 0 rgba(236, 243, 255, 0.16),
+    0 10px 18px rgba(1, 6, 14, 0.18);
 }
 
 .btn-Auto {
-  width: 30px;
-  height: 30px;
-
+  width: 34px;
+  height: 34px;
   user-select: none;
-  background-color: rgba(64, 64, 64, 0.5);
-  backdrop-filter: blur(5px);
-  border: none;
+  background:
+    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(147, 188, 255, 0.16);
   border-radius: 50%;
   box-sizing: border-box;
+  box-shadow:
+    inset 0 1px 0 rgba(236, 243, 255, 0.16),
+    0 10px 18px rgba(1, 6, 14, 0.18);
 }
 
 .btn-Right {
-  width: 30px;
-  height: 30px;
-
+  width: 34px;
+  height: 34px;
   user-select: none;
-  background-color: rgba(64, 64, 64, 0.5);
-  backdrop-filter: blur(5px);
-  border: none;
+  background:
+    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(147, 188, 255, 0.16);
   border-radius: 50%;
   box-sizing: border-box;
+  box-shadow:
+    inset 0 1px 0 rgba(236, 243, 255, 0.16),
+    0 10px 18px rgba(1, 6, 14, 0.18);
 }
 
 .btn-Steps {
@@ -927,139 +994,136 @@ export default {
 .btn-Speed:active,
 .btn-Goto:active {
   transform: scale(0.95);
-  /* 点击时缩小按钮 */
-  background-color: rgba(255, 255, 255, 0.7);
+  filter: brightness(1.1);
 }
 
 .Canvas-Bar {
   position: absolute;
-  bottom: 13px;
-  right: 7px;
-
-  width: 61px;
-  height: 60px;
-
+  bottom: 12px;
+  right: 12px;
+  width: 66px;
+  height: 64px;
   user-select: none;
-  background-color: rgba(0, 0, 0, 0.0);
-  /* backdrop-filter: blur(5px); */
-  border: 1px solid rgba(128, 128, 128, 1);
-  /* border-radius: 5px;  */
+  background:
+    linear-gradient(180deg, rgba(10, 16, 28, 0.76), rgba(4, 9, 17, 0.88));
+  border: 1px solid rgba(149, 190, 252, 0.18);
+  border-radius: 12px;
   box-sizing: border-box;
+  box-shadow: inset 0 1px 0 rgba(236, 243, 255, 0.08);
 }
 
 .Speed-Bar {
   position: absolute;
-  top: 0px;
-  left: 5px;
-
-  width: 30px;
-  height: 10px;
-
+  top: 52px;
+  left: 12px;
+  min-width: 46px;
+  height: 16px;
   user-select: none;
-  background-color: rgba(0, 0, 0, 0.0);
-  /* backdrop-filter: blur(5px); */
-  border: none;
-  border-radius: 5px;
+  padding: 0 8px;
+  background: rgba(18, 28, 46, 0.34);
+  border: 1px solid rgba(147, 188, 255, 0.08);
+  border-radius: 999px;
   box-sizing: border-box;
-
+  color: rgba(217, 232, 255, 0.76);
   text-align: center;
-  line-height: 10px;
+  line-height: 14px;
   white-space: nowrap;
-
 }
 
 .State-Bar {
   position: absolute;
-  top: 0px;
+  top: 52px;
   height: 10px;
-
   user-select: none;
-  background-color: rgba(0, 0, 0, 0.0);
-  /* backdrop-filter: blur(5px); */
-  border: none;
-  border-radius: 5px;
+  padding: 0 10px;
+  background: rgba(18, 28, 46, 0.34);
+  border: 1px solid rgba(147, 188, 255, 0.08);
+  border-radius: 999px;
   box-sizing: border-box;
-
   display: flex;
   justify-content: space-between;
+  color: rgba(236, 243, 255, 0.84);
   font-size: 10px;
-
   text-align: center;
-  line-height: 10px;
+  line-height: 14px;
   white-space: nowrap;
 }
 
 .Steps-Bar {
   position: absolute;
-  top: 0px;
-  right: 5px;
-
-  width: 30px;
-  height: 10px;
-
+  top: 52px;
+  right: 12px;
+  min-width: 46px;
+  height: 16px;
   user-select: none;
-  background-color: rgba(0, 0, 0, 0.0);
-  /* backdrop-filter: blur(5px); */
-  border: none;
-  border-radius: 5px;
+  padding: 0 8px;
+  background: rgba(18, 28, 46, 0.34);
+  border: 1px solid rgba(147, 188, 255, 0.08);
+  border-radius: 999px;
   box-sizing: border-box;
-
+  color: rgba(217, 232, 255, 0.76);
   text-align: center;
-  line-height: 10px;
+  line-height: 14px;
   white-space: nowrap;
 }
 
 #Focus-Canvas {
-  width: 59px;
-  height: 58px;
+  width: 64px;
+  height: 62px;
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 1px;
+  left: 1px;
   background-color: rgba(0, 0, 0, 0.0);
 }
 
 .btn-calibration {
-  width: 30px;
-  height: 30px;
-
+  width: 34px;
+  height: 34px;
   user-select: none;
-  background-color: rgba(64, 64, 64, 0.5);
-  backdrop-filter: blur(5px);
-  border: none;
+  background:
+    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(147, 188, 255, 0.16);
   border-radius: 50%;
   box-sizing: border-box;
+  box-shadow:
+    inset 0 1px 0 rgba(236, 243, 255, 0.16),
+    0 10px 18px rgba(1, 6, 14, 0.18);
 }
 
 .active-calibration {
-  background-color: orange;
-  /* 校准时的背景色 */
+  background:
+    linear-gradient(180deg, rgba(201, 138, 38, 0.9), rgba(109, 66, 10, 0.94));
 }
 
 .complete-calibration {
-  background-color: green;
-  /* 校准完成时的背景色 */
+  background:
+    linear-gradient(180deg, rgba(50, 145, 85, 0.92), rgba(18, 74, 40, 0.96));
 }
 
 .error-calibration {
-  background-color: red;
-  /* 校准错误时的背景色 */
+  background:
+    linear-gradient(180deg, rgba(176, 62, 62, 0.92), rgba(88, 22, 22, 0.96));
 }
 
 .btn-loop-shooting {
-  width: 30px;
-  height: 30px;
-
+  width: 34px;
+  height: 34px;
   user-select: none;
-  background-color: rgba(64, 64, 64, 0.5);
-  backdrop-filter: blur(5px);
-  border: none;
+  background:
+    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(147, 188, 255, 0.16);
   border-radius: 50%;
   box-sizing: border-box;
+  box-shadow:
+    inset 0 1px 0 rgba(236, 243, 255, 0.16),
+    0 10px 18px rgba(1, 6, 14, 0.18);
 }
 
 .active-loop {
-  background-color: rgb(40, 71, 40);
-  /* 激活时的背景色 */
+  background:
+    linear-gradient(180deg, rgba(56, 107, 92, 0.92), rgba(21, 57, 44, 0.96));
 }
 
 .rotate-animation {

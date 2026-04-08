@@ -3,30 +3,30 @@
     <span class="control-tag control-tag--panel">C-Panel</span>
     <div class="center-console__topline">
       <span class="control-tag control-tag--inline">C-Topline</span>
-      QUARCS ASTRONOMY
+      {{ topline }}
     </div>
 
     <div class="center-console__metrics">
       <div class="metrics-card metrics-card--object">
         <span class="control-tag">C-ObjectCard</span>
-        <h2>Object FS</h2>
-        <p>C: 227.29'S · -47° 51'</p>
-        <p>C: 23°50 53' · -56°7 38'</p>
+        <h2>{{ objectTitle }}</h2>
+        <p>{{ objectLine1 }}</p>
+        <p>{{ objectLine2 }}</p>
         <div class="metrics-card__status">
           <span class="control-tag control-tag--inline">C-Conn</span>
           <span>Connection</span>
           <span class="metrics-card__dot"></span>
-          <span>Wi-Fi</span>
+          <span>{{ connectionLabel }}</span>
         </div>
       </div>
 
       <div class="metrics-card metrics-card--guide">
         <span class="control-tag">C-GuideCard</span>
-        <h3>Guide Statis</h3>
-        <p>RMS: 0.330</p>
-        <p>RMS: 0.046</p>
-        <p>SERR: 0.60</p>
-        <p>RTC: 0.000</p>
+        <h3>{{ guideTitle }}</h3>
+        <p>{{ guideLine1 }}</p>
+        <p>{{ guideLine2 }}</p>
+        <p>{{ guideLine3 }}</p>
+        <p>{{ guideLine4 }}</p>
       </div>
     </div>
   </section>
@@ -34,7 +34,49 @@
 
 <script>
 export default {
-  name: 'CenterConsole'
+  name: 'CenterConsole',
+  props: {
+    topline: {
+      type: String,
+      default: 'QUARCS ASTRONOMY'
+    },
+    objectTitle: {
+      type: String,
+      default: 'No Target'
+    },
+    objectLine1: {
+      type: String,
+      default: 'RA/DEC: --'
+    },
+    objectLine2: {
+      type: String,
+      default: 'Mode: Standby'
+    },
+    connectionLabel: {
+      type: String,
+      default: 'Offline'
+    },
+    guideTitle: {
+      type: String,
+      default: 'Guide Status'
+    },
+    guideLine1: {
+      type: String,
+      default: 'RMS: --'
+    },
+    guideLine2: {
+      type: String,
+      default: 'Loop: --'
+    },
+    guideLine3: {
+      type: String,
+      default: 'Focus: --'
+    },
+    guideLine4: {
+      type: String,
+      default: 'Mount: --'
+    }
+  }
 }
 </script>
 
@@ -116,20 +158,7 @@ export default {
 }
 
 .control-tag {
-  position: absolute;
-  left: 0;
-  top: -10px;
-  z-index: 2;
-  padding: 1px 4px;
-  border-radius: 999px;
-  background: rgba(123, 74, 226, 0.14);
-  color: rgba(193, 150, 255, 0.98);
-  font-size: 7px;
-  line-height: 1.2;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-  pointer-events: none;
-  border: 1px solid rgba(170, 111, 255, 0.34);
+  display: none !important;
 }
 
 .control-tag--panel {

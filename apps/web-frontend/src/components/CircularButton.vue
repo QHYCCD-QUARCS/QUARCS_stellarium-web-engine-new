@@ -158,6 +158,37 @@ export default {
     },
   },
   methods: {
+    triggerCapturePrimaryAction() {
+      if (this.isButtonDisabled) {
+        this.$canUseDevice('MainCamera', 'Capture');
+        return false;
+      }
+      if (!this.MainCameraConnect) {
+        this.$bus.$emit('showMsgBox', 'Please connect the camera first.', 'error');
+        return false;
+      }
+      if (!this.$store.getters['device/isDeviceBound']('MainCamera')) {
+        this.$bus.$emit(
+          'showMsgBox',
+          this.$t('MainCameraNotBoundAction', { action: this.$t('Feature_Capture') }),
+          'error'
+        );
+        return false;
+      }
+      const check = this.$canUseDevice('MainCamera', 'Capture');
+      if (!check.allowed) return false;
+      this.animateProgress();
+      return true;
+    },
+    triggerAbortAction() {
+      if (!this.isClicked) return false;
+      this.$bus.$emit('AppSendMessage', 'Vue_Command', 'abortExposure');
+      this.$bus.$emit('SendConsoleLogMsg', 'Abort Exposure', 'info');
+      this.$stopFeature(['MainCamera'], 'Capture');
+      this.resetProgress();
+      this.resetlongPressProgress();
+      return true;
+    },
     handleMouseDown(event) {
       // touch/mouse 去重：触摸后短时间内忽略合成的 mouse 事件
       if (event && event.type === 'touchstart') {
@@ -211,22 +242,7 @@ export default {
       const elapsed = Date.now() - this.mousePressTimestamp;
       if (elapsed < this.longPressThreshold) {
         // 处理点击逻辑
-        if(this.MainCameraConnect) {
-          // 仅限制：拍摄（主相机未绑定时禁止）
-          if (!this.$store.getters['device/isDeviceBound']('MainCamera')) {
-            this.$bus.$emit(
-              'showMsgBox',
-              this.$t('MainCameraNotBoundAction', { action: this.$t('Feature_Capture') }),
-              'error'
-            );
-            return;
-          }
-          const check = this.$canUseDevice('MainCamera', 'Capture');
-          if (!check.allowed) return;
-          this.animateProgress();
-        } else {
-          this.$bus.$emit('showMsgBox', 'Please connect the camera first.', 'error');
-        }
+        this.triggerCapturePrimaryAction();
       }
     },
 

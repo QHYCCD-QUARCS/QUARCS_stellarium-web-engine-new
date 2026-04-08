@@ -64,6 +64,16 @@ export default {
     this.$bus.$on('AddRMSErrorData', this.onBackendRms);
   },
   methods: {
+    isTouchMobileViewport() {
+      const visualWidth = window.visualViewport && window.visualViewport.width
+        ? window.visualViewport.width
+        : 0
+      const ua = navigator.userAgent || ''
+      const touch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0)
+      const mobileLike = /Android|iPhone|iPad|iPod|Mobile|Tablet/i.test(ua)
+      const width = visualWidth || window.innerWidth || 0
+      return !!touch && (mobileLike || width <= 900)
+    },
     isCompactLegend() {
       return window.innerWidth <= 768;
     },
@@ -113,7 +123,10 @@ export default {
       this.renderChart(this.xAxis_min, this.xAxis_max, this.yAxis_min, this.yAxis_max);
     },
     initChart(Width) {
-      this.containerMaxWidth = Width - 95;
+      const reserveWidth = this.isTouchMobileViewport()
+        ? Math.max(46, Math.round(Width * 0.18))
+        : 95
+      this.containerMaxWidth = Math.max(160, Width - reserveWidth);
       const chartDom = this.$refs.linechart;
       chartDom.style.width = this.containerMaxWidth + 'px';
       this.myChart = echarts.init(chartDom);
@@ -126,7 +139,7 @@ export default {
           left: '0%',
           right: '2%',
           bottom: '0%',
-          top: '10%',
+          top: '18%',
           containLabel: true
         },
         xAxis: {
@@ -185,7 +198,7 @@ export default {
         legend: {
           data: ['RES', 'RA', 'DEC', 'TOTAL'],
           formatter: (name) => this.formatLegendLabel(name),
-          top: -5,       // 设置图例距离顶部的距离
+          top: 4,
           left: compactLegend ? 2 : 'auto',
           right: compactLegend ? 2 : 5,
           itemWidth: compactLegend ? 5 : 7,
@@ -445,4 +458,3 @@ export default {
   box-sizing: border-box;
 }
 </style>
-

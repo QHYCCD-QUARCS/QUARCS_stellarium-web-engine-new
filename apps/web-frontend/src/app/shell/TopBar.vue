@@ -1,16 +1,73 @@
 <template>
   <header class="top-bar">
+    <div class="top-bar__actions top-bar__actions--left">
+      <button
+        v-for="action in primaryActions"
+        :key="action.id"
+        type="button"
+        class="top-bar__action"
+        :class="{ 'top-bar__action--active': isActionActive(action.id) }"
+        @click="$emit('top-action', action.id)"
+      >
+        <span class="top-bar__action-label">{{ action.label }}</span>
+      </button>
+    </div>
     <div class="top-bar__brand">
       <span class="control-tag">Top-Brand</span>
       <span class="top-bar__dot"></span>
-      <div class="top-bar__title">QUARCS Device Shell Prototype</div>
+      <div class="top-bar__title">{{ titleText }}</div>
+      <div v-if="subtitle" class="top-bar__subtitle">{{ subtitle }}</div>
+    </div>
+    <div class="top-bar__actions top-bar__actions--right">
+      <button
+        v-for="action in secondaryActions"
+        :key="action.id"
+        type="button"
+        class="top-bar__action top-bar__action--compact"
+        :class="{ 'top-bar__action--active': isActionActive(action.id) }"
+        @click="$emit('top-action', action.id)"
+      >
+        <span class="top-bar__action-label">{{ action.label }}</span>
+      </button>
     </div>
   </header>
 </template>
 
 <script>
 export default {
-  name: 'TopBar'
+  name: 'TopBar',
+  props: {
+    title: {
+      type: String,
+      default: 'QUARCS Device Shell'
+    },
+    subtitle: {
+      type: String,
+      default: ''
+    },
+    primaryActions: {
+      type: Array,
+      default: () => []
+    },
+    secondaryActions: {
+      type: Array,
+      default: () => []
+    },
+    activeActionIds: {
+      type: Array,
+      default: () => []
+    }
+  },
+  computed: {
+    titleText() {
+      return this.title || 'QUARCS Device Shell'
+    }
+  },
+  methods: {
+    isActionActive(actionId) {
+      return this.activeActionIds.includes(actionId)
+    }
+  }
 }
 </script>
 
@@ -20,10 +77,10 @@ export default {
   top: 14px;
   left: 24px;
   right: 24px;
+  z-index: 260;
   display: flex;
   align-items: center;
-  justify-content: center;
-  pointer-events: none;
+  justify-content: space-between;
 }
 
 .top-bar__brand {
@@ -35,6 +92,63 @@ export default {
   border-radius: 999px;
   background: rgba(7, 16, 30, 0.18);
   backdrop-filter: blur(10px);
+  pointer-events: none;
+}
+
+.top-bar__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.top-bar__actions--left,
+.top-bar__actions--right {
+  flex: 1 1 0;
+}
+
+.top-bar__actions--right {
+  justify-content: flex-end;
+}
+
+.top-bar__action {
+  min-width: 72px;
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid rgba(150, 187, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(7, 16, 30, 0.34);
+  color: rgba(244, 247, 251, 0.76);
+  backdrop-filter: blur(12px);
+  transition: border-color 0.16s ease, background-color 0.16s ease, color 0.16s ease, transform 0.16s ease;
+}
+
+.top-bar__action:hover {
+  border-color: rgba(150, 187, 255, 0.36);
+  color: rgba(244, 247, 251, 0.96);
+}
+
+.top-bar__action:active {
+  transform: scale(0.97);
+}
+
+.top-bar__action--compact {
+  min-width: 58px;
+  padding: 0 10px;
+}
+
+.top-bar__action--active {
+  border-color: rgba(137, 181, 255, 0.62);
+  background: rgba(34, 58, 97, 0.58);
+  color: rgba(244, 247, 251, 0.96);
+  box-shadow: 0 0 0 1px rgba(137, 181, 255, 0.18) inset;
+}
+
+.top-bar__action-label {
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 .top-bar__title {
@@ -43,6 +157,13 @@ export default {
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: rgba(244, 247, 251, 0.58);
+}
+
+.top-bar__subtitle {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(244, 247, 251, 0.72);
 }
 
 .top-bar__dot {
@@ -54,27 +175,22 @@ export default {
 }
 
 .control-tag {
-  position: absolute;
-  left: 50%;
-  top: -10px;
-  transform: translateX(-50%);
-  z-index: 2;
-  padding: 1px 4px;
-  border-radius: 999px;
-  background: rgba(123, 74, 226, 0.14);
-  color: rgba(193, 150, 255, 0.98);
-  font-size: 7px;
-  line-height: 1.2;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-  pointer-events: none;
-  border: 1px solid rgba(170, 111, 255, 0.34);
+  display: none !important;
 }
 
 @media (max-width: 960px) {
   .top-bar {
     left: 12px;
     right: 12px;
+  }
+
+  .top-bar__actions {
+    gap: 6px;
+  }
+
+  .top-bar__action {
+    min-width: 58px;
+    padding: 0 10px;
   }
 }
 </style>

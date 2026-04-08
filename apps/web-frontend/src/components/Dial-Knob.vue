@@ -60,6 +60,7 @@ export default {
   },
   created() {
     this.$bus.$on('toggleHistogramPanel', this.setMaxWidth);
+    this.$bus.$on('updateHistogramWidth', this.setPanelWidth);
     this.$bus.$on('ChangeDialPosition', this.ChangeDialPosition);
     // 与直方图区间模式联动
     this.$bus.$on('HistogramRangeMode', this.setRangeMode);
@@ -89,6 +90,11 @@ export default {
     setMaxWidth() {
       const Width = window.innerWidth;
       this.width = Math.min(Width - 350, 490);
+    },
+    setPanelWidth(width) {
+      const nextWidth = Math.max((Number(width) || 0) - 10, 120)
+      this.width = nextWidth
+      this.ChangeDialPosition(this.windowMin, this.windowMax)
     },
     startDrag(event) {
       event.preventDefault(); // 阻止默认触摸事件

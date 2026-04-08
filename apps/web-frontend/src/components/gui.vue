@@ -105,7 +105,7 @@
           </div>
         </button>
       </transition>
-      <mount-control-panel v-show="showFloatingBox" style="position: absolute; top: 50px; right: 10px; "
+      <mount-control-panel v-if="!shellOwnsLegacyAdapters && showFloatingBox" style="position: absolute; top: 50px; right: 10px; "
         class="get-click"></mount-control-panel>
     </div>
 
@@ -156,7 +156,7 @@
       </button>
     </transition>
 
-    <ChartComponent v-show="showChartsPanel" class="get-click" />
+    <ChartComponent v-if="!shellOwnsLegacyAdapters && showChartsPanel" class="get-click" />
     <transition name="BottomBtn">
       <button
         v-show="isCaptureMode"
@@ -171,9 +171,9 @@
       </button>
     </transition>
 
-    <HistogramPanel v-show="showHistogramPanel" class="get-click" />
+    <HistogramPanel v-if="!shellOwnsLegacyAdapters && showHistogramPanel" class="get-click" />
 
-    <FocuserPanel v-show="showFocuserPanel" class="get-click" />
+    <FocuserPanel v-if="!shellOwnsLegacyAdapters && showFocuserPanel" class="get-click" />
 
     <!-- 使用CSS Grid布局的按钮容器 -->
     <div class="left-button-container">
@@ -291,20 +291,20 @@
     </div>
   </button> -->
 
-    <DateTimePicker v-show="ShowDateTimePicker" v-model="pickerDate" :location="$store.state.currentLocation">
+    <DateTimePicker v-if="!shellOwnsLegacyAdapters && ShowDateTimePicker" v-model="pickerDate" :location="$store.state.currentLocation">
     </DateTimePicker>
 
-    <ImageManagerPanel v-show="ShowImageManagerPanel" :isOpen="ShowImageManagerPanel" />
+    <ImageManagerPanel v-if="!shellOwnsLegacyAdapters && ShowImageManagerPanel" :isOpen="ShowImageManagerPanel" />
 
-    <DeviceAllocationPanel v-show="ShowDeviceAllocationPanel" :isOpen="ShowDeviceAllocationPanel" />
+    <DeviceAllocationPanel v-if="!shellOwnsLegacyAdapters && ShowDeviceAllocationPanel" :isOpen="ShowDeviceAllocationPanel" />
 
-    <INDIDebugDialog v-show="ShowINDIDebugDialog" :isOpen="ShowINDIDebugDialog" />
+    <INDIDebugDialog v-if="!shellOwnsLegacyAdapters && ShowINDIDebugDialog" :isOpen="ShowINDIDebugDialog" />
 
-    <RPIHotspotDialog v-show="ShowRPIHotspotDialog" />
+    <RPIHotspotDialog v-if="!shellOwnsLegacyAdapters && ShowRPIHotspotDialog" />
 
     <!-- 统一后的任务计划表面板 -->
     <SchedulePanel
-      v-show="ShowSchedulePanel"
+      v-if="!shellOwnsLegacyAdapters && ShowSchedulePanel"
       :isOpen="ShowSchedulePanel"
       class="get-click"
       style="position: absolute; z-index: 200;"
@@ -475,11 +475,12 @@
       />
     </div> -->
     <AutomaticPolarAlignmentCalibration
+      v-if="!shellOwnsLegacyAdapters"
       :visible.sync="isCalibrationVisible"
       :auto-start="false"
     />
 
-    <CapturePanel v-show="isCaptureMode" />
+    <CapturePanel v-if="!shellOwnsLegacyAdapters && isCaptureMode" />
   </div>
 
 </template>
@@ -538,6 +539,7 @@ export default {
     return {
       messageList: [],  // 用于存储消息框的数据
       messageNum: 0,    // 消息数量
+      shellOwnsLegacyAdapters: true,
       showFloatingBox: false,  // 是否显示浮动框
       isSettingWindowShow: false,  // 是否显示设置窗口
       isBottomBarShow: true,  // 是否显示底部栏
