@@ -161,11 +161,25 @@ export default {
   flex: 1 1 auto;
   min-width: 0;
   height: 100%;
-  padding: 36px 12px 92px;
+  padding: 34px 12px 86px;
   display: flex;
   flex-direction: column;
   gap: 18px;
-  color: rgba(242, 247, 252, 0.96);
+  color: var(--qs-text-primary);
+}
+
+.settings-workspace::before {
+  content: "";
+  position: absolute;
+  inset: 76px 6px 56px;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(118, 167, 244, 0.08), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 12%, transparent 88%, rgba(255, 255, 255, 0.02));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    inset 0 0 0 1px rgba(128, 166, 227, 0.06);
+  pointer-events: none;
 }
 
 .settings-workspace__header {
@@ -188,13 +202,13 @@ export default {
   font-size: 12px;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(170, 188, 214, 0.82);
+  color: var(--qs-text-muted);
 }
 
 .settings-workspace__title {
   margin: 0;
-  font-size: 34px;
-  font-weight: 600;
+  font-size: 42px;
+  font-weight: 700;
   letter-spacing: 0.05em;
 }
 
@@ -217,8 +231,9 @@ export default {
   gap: 8px;
   padding: 6px;
   border-radius: 999px;
-  background: rgba(9, 18, 31, 0.56);
+  background: linear-gradient(180deg, rgba(18, 30, 48, 0.82), rgba(8, 14, 25, 0.9));
   border: 1px solid rgba(146, 176, 222, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .settings-workspace__language-button {
@@ -253,9 +268,10 @@ export default {
   gap: 8px;
   padding: 10px 14px;
   border-radius: 999px;
-  background: rgba(9, 18, 31, 0.56);
+  background: linear-gradient(180deg, rgba(18, 30, 48, 0.82), rgba(8, 14, 25, 0.9));
   border: 1px solid rgba(146, 176, 222, 0.16);
-  backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
   font-size: 13px;
 }
 
@@ -271,13 +287,15 @@ export default {
 .settings-workspace__panel {
   flex: 1 1 auto;
   min-height: 0;
-  padding: 22px 24px 24px;
-  border-radius: 30px;
-  border: 1px solid rgba(157, 185, 228, 0.14);
+  padding: 24px 26px 26px;
+  border-radius: 34px;
+  border: 1px solid rgba(157, 185, 228, 0.16);
   background:
-    linear-gradient(180deg, rgba(14, 22, 39, 0.94) 0%, rgba(10, 16, 29, 0.92) 100%);
+    radial-gradient(circle at 50% 0%, rgba(113, 163, 247, 0.08), transparent 22%),
+    linear-gradient(180deg, rgba(16, 26, 44, 0.96) 0%, rgba(9, 16, 29, 0.94) 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -24px 38px rgba(3, 8, 14, 0.26),
     0 30px 70px rgba(0, 0, 0, 0.26);
   display: flex;
   flex-direction: column;
@@ -331,10 +349,13 @@ export default {
   border: 1px solid rgba(145, 175, 221, 0.14);
   border-radius: 22px;
   background:
-    linear-gradient(180deg, rgba(26, 40, 66, 0.92) 0%, rgba(17, 27, 44, 0.92) 100%);
+    linear-gradient(180deg, rgba(29, 46, 74, 0.92) 0%, rgba(15, 24, 39, 0.94) 100%);
   color: rgba(245, 248, 252, 0.96);
   text-align: left;
   cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -14px 24px rgba(3, 8, 14, 0.18);
   transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
@@ -369,9 +390,11 @@ export default {
   align-items: center;
   justify-content: center;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(96, 134, 201, 0.12));
   color: rgba(214, 231, 255, 0.96);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 10px 16px rgba(4, 10, 18, 0.16);
 }
 
 .settings-workspace__card-title {

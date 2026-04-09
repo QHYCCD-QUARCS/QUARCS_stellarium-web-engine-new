@@ -1,19 +1,17 @@
 <template>
   <section class="center-console">
-    <span class="control-tag control-tag--panel">C-Panel</span>
     <div class="center-console__topline">
-      <span class="control-tag control-tag--inline">C-Topline</span>
+      <span class="center-console__topline-dot"></span>
       {{ topline }}
     </div>
 
     <div class="center-console__metrics">
       <div class="metrics-card metrics-card--object">
-        <span class="control-tag">C-ObjectCard</span>
+        <div class="metrics-card__eyebrow">Target</div>
         <h2>{{ objectTitle }}</h2>
         <p>{{ objectLine1 }}</p>
         <p>{{ objectLine2 }}</p>
         <div class="metrics-card__status">
-          <span class="control-tag control-tag--inline">C-Conn</span>
           <span>Connection</span>
           <span class="metrics-card__dot"></span>
           <span>{{ connectionLabel }}</span>
@@ -21,7 +19,7 @@
       </div>
 
       <div class="metrics-card metrics-card--guide">
-        <span class="control-tag">C-GuideCard</span>
+        <div class="metrics-card__eyebrow">Telemetry</div>
         <h3>{{ guideTitle }}</h3>
         <p>{{ guideLine1 }}</p>
         <p>{{ guideLine2 }}</p>
@@ -87,30 +85,69 @@ export default {
   min-width: 0;
   height: 100%;
   pointer-events: none;
-  color: rgba(245, 248, 252, 0.94);
-  padding: 42px 8px 0;
+  color: var(--qs-text-primary);
+  padding: 40px 12px 0;
 }
 
 .center-console__topline {
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(18, 30, 49, 0.72), rgba(8, 14, 24, 0.78));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 0 0 1px rgba(129, 169, 233, 0.12),
+    0 16px 28px rgba(2, 8, 16, 0.2);
   text-align: center;
-  letter-spacing: 0.18em;
-  font-size: 14px;
-  color: rgba(245, 248, 252, 0.56);
+  letter-spacing: 0.22em;
+  font-size: 12px;
+  color: rgba(245, 248, 252, 0.68);
   text-transform: uppercase;
+}
+
+.center-console__topline-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(132, 189, 255, 0.92);
+  box-shadow: 0 0 12px rgba(132, 189, 255, 0.64);
 }
 
 .center-console__metrics {
   display: flex;
   justify-content: space-between;
   gap: 24px;
-  margin-top: 20px;
+  margin-top: 22px;
 }
 
 .metrics-card {
   position: relative;
-  padding: 10px 2px;
+  min-width: 272px;
+  max-width: 320px;
+  padding: 18px 22px;
+  border-radius: 26px;
+  border: 1px solid rgba(128, 166, 227, 0.12);
+  background:
+    linear-gradient(180deg, rgba(23, 37, 60, 0.82), rgba(8, 14, 25, 0.9));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -18px 28px rgba(3, 8, 14, 0.28),
+    0 18px 30px rgba(0, 0, 0, 0.18);
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(16px);
+}
+
+.metrics-card__eyebrow {
+  margin-bottom: 10px;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--qs-text-muted);
 }
 
 .metrics-card h2,
@@ -121,23 +158,24 @@ export default {
 
 .metrics-card h2,
 .metrics-card h3 {
-  margin-bottom: 8px;
-  font-weight: 500;
+  margin-bottom: 10px;
+  font-weight: 600;
 }
 
 .metrics-card h2 {
-  font-size: 20px;
+  font-size: 28px;
 }
 
 .metrics-card h3 {
-  font-size: 18px;
+  font-size: 22px;
   text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .metrics-card p {
-  margin-bottom: 6px;
-  font-size: 16px;
-  color: rgba(245, 248, 252, 0.82);
+  margin-bottom: 7px;
+  font-size: 14px;
+  color: var(--qs-text-secondary);
 }
 
 .metrics-card__status {
@@ -145,8 +183,10 @@ export default {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 10px;
-  font-size: 15px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(128, 166, 227, 0.12);
+  font-size: 13px;
 }
 
 .metrics-card__dot {
@@ -160,16 +200,4 @@ export default {
 .control-tag {
   display: none !important;
 }
-
-.control-tag--panel {
-  left: 50%;
-  top: 8px;
-  transform: translateX(-50%);
-}
-
-.control-tag--inline {
-  left: 50%;
-  transform: translateX(-50%);
-}
-
 </style>

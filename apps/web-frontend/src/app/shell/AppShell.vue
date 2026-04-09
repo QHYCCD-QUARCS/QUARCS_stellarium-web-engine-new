@@ -6,9 +6,10 @@
           class="app-shell__top"
           :title="topBarTitle"
           :subtitle="connectionSummary"
-          :primary-actions="[]"
-          :secondary-actions="[]"
-          :active-action-ids="[]"
+          :primary-actions="topBarPrimaryActions"
+          :secondary-actions="topBarSecondaryActions"
+          :active-action-ids="activeTopActionIds"
+          @top-action="handleTopAction"
         />
         <TargetSearch
           v-show="showCompactSearch"
@@ -1442,10 +1443,10 @@ export default {
 
 .app-shell__search {
   position: absolute;
-  top: 54px;
+  top: 58px;
   left: 50%;
   z-index: 255;
-  width: min(360px, calc(100% - 560px));
+  width: min(390px, calc(100% - 620px));
   min-width: 220px;
   transform: translateX(-50%);
 }
@@ -1453,34 +1454,51 @@ export default {
 .app-shell__stage-frame {
   pointer-events: none;
   position: absolute;
-  inset: 26px 18px 18px;
-  border-radius: 44px;
-  border: 1px solid rgba(214, 226, 244, 0.12);
+  inset: 18px 10px 12px;
+  border-radius: 56px;
+  border: 1px solid var(--qs-border-soft);
   background:
-    radial-gradient(circle at 0% 52%, rgba(94, 136, 210, 0.09), transparent 18%),
-    radial-gradient(circle at 100% 52%, rgba(94, 136, 210, 0.09), transparent 18%),
-    radial-gradient(circle at 50% 0%, rgba(143, 182, 255, 0.08), transparent 24%),
-    radial-gradient(circle at 50% 100%, rgba(143, 182, 255, 0.06), transparent 26%),
-    linear-gradient(180deg, rgba(8, 15, 27, 0.04), rgba(3, 8, 16, 0.12));
+    radial-gradient(circle at 50% -4%, rgba(170, 210, 255, 0.12), transparent 22%),
+    radial-gradient(circle at 12% 50%, rgba(91, 134, 219, 0.11), transparent 18%),
+    radial-gradient(circle at 88% 50%, rgba(91, 134, 219, 0.11), transparent 18%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 12%, transparent 84%, rgba(255, 255, 255, 0.03)),
+    linear-gradient(180deg, rgba(8, 14, 25, 0.18), rgba(2, 6, 12, 0.4));
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
-    inset 0 -40px 120px rgba(2, 7, 16, 0.18),
-    inset 0 24px 72px rgba(115, 161, 238, 0.03);
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    inset 0 -52px 120px rgba(2, 7, 16, 0.36),
+    inset 0 32px 80px rgba(115, 161, 238, 0.06),
+    0 30px 80px var(--qs-panel-shadow);
 }
 
 .app-shell__stage-frame--hidden {
   opacity: 0;
 }
 
+.app-shell__stage-frame::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border-radius: 46px;
+}
+
+.app-shell__stage-frame::before {
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -20px 50px rgba(4, 10, 18, 0.3);
+}
+
 .app-shell__settings-backdrop {
   position: absolute;
-  inset: 26px 18px 18px;
-  border-radius: 44px;
+  inset: 18px 10px 12px;
+  border-radius: 56px;
   background:
-    radial-gradient(circle at 50% 0%, rgba(68, 106, 168, 0.16), transparent 28%),
-    linear-gradient(180deg, rgba(6, 11, 20, 0.96) 0%, rgba(3, 8, 16, 0.98) 100%);
+    radial-gradient(circle at 50% 0%, rgba(68, 106, 168, 0.18), transparent 28%),
+    linear-gradient(180deg, rgba(8, 14, 24, 0.94) 0%, rgba(3, 8, 16, 0.98) 100%);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
     0 30px 80px rgba(0, 0, 0, 0.3);
 }
 
@@ -1490,11 +1508,11 @@ export default {
 
 .app-shell__body {
   position: absolute;
-  inset: 26px 24px 18px 24px;
+  inset: 22px 18px 14px 18px;
   display: flex;
   justify-content: space-between;
   align-items: stretch;
-  gap: 14px;
+  gap: 8px;
 }
 
 .app-shell__body--hidden {
@@ -1590,15 +1608,15 @@ export default {
 }
 
 .app-shell__search::v-deep(.v-input__slot) {
-  min-height: 42px !important;
-  padding: 0 14px !important;
-  border-radius: 18px !important;
-  background: rgba(7, 16, 30, 0.56) !important;
+  min-height: 44px !important;
+  padding: 0 16px !important;
+  border-radius: 20px !important;
+  background: linear-gradient(180deg, rgba(20, 33, 55, 0.74), rgba(8, 15, 27, 0.84)) !important;
   box-shadow:
-    inset 0 1px 0 rgba(234, 243, 255, 0.12),
-    inset 0 0 0 1px rgba(134, 177, 248, 0.18),
-    0 12px 28px rgba(1, 6, 14, 0.18) !important;
-  backdrop-filter: blur(14px);
+    inset 0 1px 0 rgba(234, 243, 255, 0.16),
+    inset 0 0 0 1px rgba(134, 177, 248, 0.2),
+    0 14px 28px rgba(1, 6, 14, 0.22) !important;
+  backdrop-filter: blur(16px);
 }
 
 .app-shell__search::v-deep(.v-text-field__slot input),
@@ -1609,9 +1627,10 @@ export default {
 
 .app-shell__search::v-deep(.v-list) {
   margin-top: 8px;
-  border-radius: 18px;
-  background: rgba(8, 15, 27, 0.88) !important;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(16, 27, 44, 0.94), rgba(7, 14, 25, 0.96)) !important;
   box-shadow:
+    inset 0 1px 0 rgba(234, 243, 255, 0.08),
     inset 0 0 0 1px rgba(132, 176, 247, 0.16),
     0 18px 36px rgba(1, 5, 12, 0.24);
   backdrop-filter: blur(16px);

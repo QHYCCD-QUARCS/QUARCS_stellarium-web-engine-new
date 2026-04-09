@@ -74,9 +74,9 @@ export default {
 <style scoped>
 .top-bar {
   position: absolute;
-  top: 14px;
-  left: 24px;
-  right: 24px;
+  top: 10px;
+  left: 18px;
+  right: 18px;
   z-index: 260;
   display: flex;
   align-items: center;
@@ -88,10 +88,14 @@ export default {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 14px;
+  padding: 10px 16px;
   border-radius: 999px;
-  background: rgba(7, 16, 30, 0.18);
-  backdrop-filter: blur(10px);
+  background: linear-gradient(180deg, rgba(21, 34, 55, 0.84), rgba(7, 14, 24, 0.92));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 0 0 1px rgba(131, 171, 239, 0.12),
+    0 16px 26px rgba(1, 6, 14, 0.22);
+  backdrop-filter: blur(14px);
   pointer-events: none;
 }
 
@@ -115,11 +119,14 @@ export default {
   min-width: 72px;
   height: 34px;
   padding: 0 14px;
-  border: 1px solid rgba(150, 187, 255, 0.18);
+  border: 1px solid rgba(150, 187, 255, 0.2);
   border-radius: 999px;
-  background: rgba(7, 16, 30, 0.34);
-  color: rgba(244, 247, 251, 0.76);
-  backdrop-filter: blur(12px);
+  background: linear-gradient(180deg, rgba(20, 33, 55, 0.72), rgba(7, 14, 24, 0.82));
+  color: rgba(244, 247, 251, 0.8);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 10px 20px rgba(1, 6, 14, 0.16);
+  backdrop-filter: blur(14px);
   transition: border-color 0.16s ease, background-color 0.16s ease, color 0.16s ease, transform 0.16s ease;
 }
 
@@ -153,10 +160,10 @@ export default {
 
 .top-bar__title {
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: rgba(244, 247, 251, 0.58);
+  color: rgba(244, 247, 251, 0.7);
 }
 
 .top-bar__subtitle {

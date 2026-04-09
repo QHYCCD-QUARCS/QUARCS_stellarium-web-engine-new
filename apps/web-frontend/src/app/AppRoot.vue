@@ -20,14 +20,61 @@ export default {
 
 <style>
 .app-root {
+  --qs-bg-top: #08111f;
+  --qs-bg-bottom: #02060d;
+  --qs-surface-0: rgba(4, 10, 18, 0.96);
+  --qs-surface-1: rgba(8, 16, 28, 0.9);
+  --qs-surface-2: rgba(13, 24, 40, 0.88);
+  --qs-surface-3: rgba(20, 35, 58, 0.92);
+  --qs-surface-4: rgba(28, 50, 82, 0.94);
+  --qs-panel-shadow: rgba(0, 0, 0, 0.42);
+  --qs-panel-shadow-soft: rgba(0, 0, 0, 0.24);
+  --qs-border-soft: rgba(129, 165, 223, 0.18);
+  --qs-border-strong: rgba(183, 214, 255, 0.34);
+  --qs-highlight-soft: rgba(238, 245, 255, 0.14);
+  --qs-highlight-strong: rgba(214, 233, 255, 0.3);
+  --qs-glow-blue: rgba(84, 139, 241, 0.22);
+  --qs-glow-cyan: rgba(102, 200, 255, 0.12);
+  --qs-text-primary: rgba(244, 248, 252, 0.96);
+  --qs-text-secondary: rgba(212, 223, 238, 0.82);
+  --qs-text-muted: rgba(174, 193, 220, 0.68);
+  --qs-radius-xl: 44px;
+  --qs-radius-lg: 28px;
+  --qs-radius-md: 20px;
+  --qs-radius-pill: 999px;
   position: relative;
   width: 100%;
   height: 100vh;
   min-height: 100dvh;
   overflow: hidden;
   background:
-    radial-gradient(circle at top, rgba(22, 40, 68, 0.45), transparent 42%),
-    linear-gradient(180deg, #07111f 0%, #03070d 100%);
+    radial-gradient(circle at 50% -8%, rgba(121, 172, 255, 0.28), transparent 28%),
+    radial-gradient(circle at 14% 50%, rgba(60, 108, 198, 0.18), transparent 20%),
+    radial-gradient(circle at 86% 52%, rgba(60, 108, 198, 0.18), transparent 20%),
+    linear-gradient(180deg, var(--qs-bg-top) 0%, var(--qs-bg-bottom) 100%);
+}
+
+.app-root::before,
+.app-root::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.app-root::before {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 16%, transparent 82%, rgba(255, 255, 255, 0.02)),
+    radial-gradient(circle at 50% 10%, rgba(171, 209, 255, 0.12), transparent 24%),
+    radial-gradient(circle at 50% 88%, rgba(10, 18, 32, 0.72), transparent 36%);
+  z-index: 1;
+}
+
+.app-root::after {
+  background:
+    linear-gradient(90deg, rgba(2, 6, 12, 0.84), transparent 11%, transparent 89%, rgba(2, 6, 12, 0.84)),
+    linear-gradient(180deg, rgba(2, 6, 12, 0.8), transparent 12%, transparent 88%, rgba(2, 6, 12, 0.82));
+  z-index: 1;
 }
 
 .app-root__viewport,
