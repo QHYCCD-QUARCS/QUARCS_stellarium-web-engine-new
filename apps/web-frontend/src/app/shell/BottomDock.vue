@@ -125,13 +125,13 @@ export default {
   flex-direction: column;
   padding: 0;
   border-radius: 28px;
-  border: 1px solid rgba(233, 241, 252, 0.14);
+  border: 1px solid rgba(175, 198, 240, 0.32);
   background:
-    linear-gradient(180deg, rgba(18, 28, 46, 0.78) 0%, rgba(12, 18, 31, 0.68) 100%);
+    linear-gradient(180deg, rgba(205, 216, 240, 0.88) 0%, rgba(185, 200, 230, 0.84) 100%);
   backdrop-filter: blur(20px);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    0 24px 70px rgba(2, 5, 12, 0.38);
+    inset 0 1px 0 rgba(255, 255, 255, 0.52),
+    0 24px 70px rgba(60, 85, 140, 0.22);
   overflow: hidden;
   transition: height 220ms ease, box-shadow 220ms ease, background 220ms ease;
 }
@@ -142,7 +142,7 @@ export default {
   justify-content: flex-start;
   gap: 18px;
   padding: 14px 22px 10px;
-  border-bottom: 1px solid rgba(233, 241, 252, 0.1);
+  border-bottom: 1px solid rgba(155, 182, 230, 0.24);
 }
 
 .bottom-dock__tab {
@@ -150,7 +150,7 @@ export default {
   border: 0;
   padding: 0 0 10px;
   background: transparent;
-  color: rgba(234, 240, 248, 0.64);
+  color: rgba(55, 82, 130, 0.72);
   font-size: 15px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -158,8 +158,8 @@ export default {
 }
 
 .bottom-dock__tab--active {
-  color: rgba(244, 247, 251, 0.98);
-  box-shadow: inset 0 -3px 0 #69a6ff;
+  color: rgba(22, 45, 90, 0.96);
+  box-shadow: inset 0 -3px 0 rgba(55, 105, 210, 0.80);
 }
 
 .bottom-dock__toggle {
@@ -170,12 +170,13 @@ export default {
   height: 30px;
   padding: 0 12px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.09);
-  color: rgba(244, 247, 251, 0.9);
+  background: rgba(255, 255, 255, 0.28);
+  color: rgba(28, 52, 100, 0.90);
   font-size: 12px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   cursor: pointer;
+  border: 1px solid rgba(155, 185, 240, 0.30);
 }
 
 .bottom-dock__chart {
@@ -217,7 +218,7 @@ export default {
 .chart-label {
   position: absolute;
   font-size: 14px;
-  color: rgba(244, 247, 251, 0.78);
+  color: rgba(22, 48, 95, 0.82);
   transition: opacity 220ms ease, transform 220ms ease;
 }
 
@@ -250,8 +251,8 @@ export default {
 
 .bottom-dock--compact {
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 20px 52px rgba(2, 5, 12, 0.3);
+    inset 0 1px 0 rgba(255, 255, 255, 0.48),
+    0 20px 52px rgba(60, 85, 140, 0.18);
 }
 
 .bottom-dock--compact .bottom-dock__tabs {

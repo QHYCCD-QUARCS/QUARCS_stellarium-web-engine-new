@@ -358,15 +358,15 @@ export default {
   position: absolute;
   overflow: hidden;
   background:
-    linear-gradient(180deg, rgba(18, 28, 46, 0.92), rgba(8, 14, 24, 0.94));
+    linear-gradient(180deg, rgba(205, 218, 242, 0.94), rgba(182, 198, 228, 0.96));
   backdrop-filter: blur(16px);
   border-radius: 24px;
-  border: 1px solid rgba(147, 188, 255, 0.16);
+  border: 1px solid rgba(165, 192, 238, 0.40);
   box-sizing: border-box;
   box-shadow:
-    inset 0 1px 0 rgba(241, 246, 255, 0.12),
-    inset 0 0 0 1px rgba(122, 167, 237, 0.08),
-    0 22px 40px rgba(1, 6, 14, 0.24);
+    inset 0 1px 0 rgba(255, 255, 255, 0.56),
+    inset 0 0 0 1px rgba(155, 188, 242, 0.22),
+    0 22px 40px rgba(60, 85, 140, 0.20);
 }
 
 .chart-panel::before {
@@ -376,7 +376,7 @@ export default {
   right: 14px;
   top: 48px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(145, 186, 248, 0.34), transparent);
+  background: linear-gradient(90deg, transparent, rgba(125, 168, 230, 0.44), transparent);
 }
 
 @keyframes showPanelAnimation {
@@ -434,14 +434,14 @@ export default {
   align-items: center;
   justify-content: center;
   background:
-    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+    linear-gradient(180deg, rgba(212, 224, 248, 0.96), rgba(188, 204, 234, 0.98));
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(147, 188, 255, 0.16);
+  border: 1px solid rgba(165, 192, 238, 0.42);
   border-radius: 50%; 
   box-sizing: border-box;
   box-shadow:
-    inset 0 1px 0 rgba(236, 243, 255, 0.16),
-    0 10px 18px rgba(1, 6, 14, 0.18);
+    inset 0 1px 0 rgba(255, 255, 255, 0.58),
+    0 10px 18px rgba(60, 85, 140, 0.16);
 }
 
 .btn-LoopExp-false {
@@ -452,14 +452,14 @@ export default {
   align-items: center;
   justify-content: center;
   background:
-    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+    linear-gradient(180deg, rgba(212, 224, 248, 0.96), rgba(188, 204, 234, 0.98));
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(147, 188, 255, 0.16);
+  border: 1px solid rgba(165, 192, 238, 0.42);
   border-radius: 50%; 
   box-sizing: border-box;
   box-shadow:
-    inset 0 1px 0 rgba(236, 243, 255, 0.16),
-    0 10px 18px rgba(1, 6, 14, 0.18);
+    inset 0 1px 0 rgba(255, 255, 255, 0.58),
+    0 10px 18px rgba(60, 85, 140, 0.16);
 }
 
 .btn-LoopExp-true {
@@ -470,14 +470,14 @@ export default {
   align-items: center;
   justify-content: center;
   background:
-    linear-gradient(180deg, rgba(52, 93, 146, 0.92), rgba(20, 37, 62, 0.96));
+    linear-gradient(180deg, rgba(95, 148, 218, 0.94), rgba(62, 108, 188, 0.96));
   backdrop-filter: blur(10px);
   border-radius: 50%; 
   box-sizing: border-box;
-  border: 1px solid rgba(166, 208, 255, 0.28);
+  border: 1px solid rgba(160, 205, 255, 0.48);
   box-shadow:
-    inset 0 1px 0 rgba(244, 248, 255, 0.18),
-    0 0 14px rgba(88, 152, 255, 0.18);
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 0 14px rgba(88, 152, 255, 0.22);
 
   animation: Animation_true infinite;
 }

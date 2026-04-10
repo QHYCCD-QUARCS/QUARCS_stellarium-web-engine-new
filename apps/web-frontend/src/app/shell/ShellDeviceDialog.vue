@@ -455,14 +455,14 @@ export default {
 <style scoped>
 .shell-device-dialog {
   border-radius: 28px;
-  border: 1px solid rgba(149, 182, 230, 0.14);
+  border: 1px solid rgba(165, 192, 238, 0.38);
   background:
-    radial-gradient(circle at top, rgba(55, 92, 150, 0.24), transparent 32%),
-    linear-gradient(180deg, rgba(7, 14, 27, 0.98) 0%, rgba(4, 10, 20, 0.98) 100%);
-  color: rgba(244, 248, 252, 0.96);
+    radial-gradient(circle at top, rgba(200, 220, 255, 0.22), transparent 32%),
+    linear-gradient(180deg, rgba(208, 220, 244, 0.96) 0%, rgba(185, 200, 232, 0.98) 100%);
+  color: rgba(22, 42, 82, 0.96);
   box-shadow:
-    0 32px 90px rgba(0, 0, 0, 0.42),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    0 32px 90px rgba(60, 85, 140, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.52);
 }
 
 .shell-device-dialog__header {
@@ -470,7 +470,7 @@ export default {
   justify-content: space-between;
   gap: 16px;
   padding: 24px 26px 18px;
-  border-bottom: 1px solid rgba(149, 182, 230, 0.12);
+  border-bottom: 1px solid rgba(155, 185, 235, 0.30);
 }
 
 .shell-device-dialog__eyebrow {
@@ -478,7 +478,7 @@ export default {
   font-size: 11px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(167, 187, 217, 0.74);
+  color: rgba(72, 102, 155, 0.78);
 }
 
 .shell-device-dialog__title {
@@ -500,16 +500,17 @@ export default {
   padding: 10px 14px;
   border-radius: 999px;
   font-size: 13px;
-  background: rgba(13, 23, 40, 0.8);
-  border: 1px solid rgba(149, 182, 230, 0.12);
+  background: linear-gradient(180deg, rgba(218, 228, 248, 0.92), rgba(195, 210, 238, 0.96));
+  border: 1px solid rgba(165, 192, 238, 0.38);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.50);
 }
 
 .shell-device-dialog__status--online {
-  color: rgba(127, 235, 178, 0.96);
+  color: rgba(15, 115, 65, 0.92);
 }
 
 .shell-device-dialog__status--offline {
-  color: rgba(246, 200, 133, 0.96);
+  color: rgba(145, 90, 20, 0.88);
 }
 
 .shell-device-dialog__close {
@@ -517,8 +518,10 @@ export default {
   height: 42px;
   border: 0;
   border-radius: 14px;
-  background: rgba(13, 23, 40, 0.8);
-  color: rgba(235, 241, 248, 0.94);
+  background: linear-gradient(180deg, rgba(218, 228, 248, 0.92), rgba(195, 210, 238, 0.96));
+  color: rgba(28, 52, 100, 0.88);
+  border: 1px solid rgba(165, 192, 238, 0.30);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.48);
 }
 
 .shell-device-dialog__body {
@@ -538,9 +541,9 @@ export default {
   height: 100%;
   padding: 18px;
   border-radius: 24px;
-  border: 1px solid rgba(149, 182, 230, 0.12);
-  background: rgba(10, 19, 34, 0.84);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(165, 192, 238, 0.36);
+  background: linear-gradient(180deg, rgba(215, 226, 248, 0.94), rgba(192, 207, 235, 0.96));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.52);
 }
 
 .shell-device-dialog__panel--config {
@@ -567,7 +570,7 @@ export default {
 .shell-device-dialog__panel-head span {
   font-size: 11px;
   letter-spacing: 0.16em;
-  color: rgba(166, 185, 214, 0.68);
+  color: rgba(72, 100, 155, 0.72);
 }
 
 .shell-device-dialog__summary {
@@ -582,14 +585,16 @@ export default {
   gap: 4px;
   padding: 12px 14px;
   border-radius: 18px;
-  background: rgba(20, 33, 57, 0.78);
+  background: linear-gradient(180deg, rgba(225, 234, 252, 0.90), rgba(205, 218, 244, 0.94));
+  border: 1px solid rgba(165, 192, 238, 0.28);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
 .shell-device-dialog__summary-label {
   font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(166, 185, 214, 0.66);
+  color: rgba(72, 100, 155, 0.70);
 }
 
 .shell-device-dialog__controls {
@@ -622,7 +627,7 @@ export default {
   gap: 8px;
   margin-top: 14px;
   font-size: 13px;
-  color: rgba(209, 220, 236, 0.8);
+  color: rgba(52, 82, 138, 0.82);
 }
 
 .shell-device-dialog__config-grid {
@@ -638,15 +643,16 @@ export default {
 .shell-device-dialog__config-card {
   padding: 14px 14px 12px;
   border-radius: 18px;
-  background: rgba(17, 29, 50, 0.86);
-  border: 1px solid rgba(149, 182, 230, 0.1);
+  background: linear-gradient(180deg, rgba(222, 232, 250, 0.94), rgba(200, 215, 242, 0.96));
+  border: 1px solid rgba(165, 192, 238, 0.32);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.48);
 }
 
 .shell-device-dialog__config-title {
   margin-bottom: 10px;
   font-size: 13px;
   font-weight: 600;
-  color: rgba(238, 243, 250, 0.96);
+  color: rgba(22, 42, 82, 0.96);
 }
 
 .shell-device-dialog__slider-wrap {
@@ -659,7 +665,7 @@ export default {
   align-items: center;
   margin-bottom: 6px;
   font-size: 12px;
-  color: rgba(198, 210, 227, 0.82);
+  color: rgba(55, 85, 138, 0.82);
 }
 
 .shell-device-dialog__tip {
@@ -668,9 +674,10 @@ export default {
   align-items: center;
   padding: 10px 12px;
   border-radius: 14px;
-  background: rgba(8, 17, 29, 0.72);
-  color: rgba(214, 224, 237, 0.82);
+  background: rgba(200, 215, 242, 0.70);
+  color: rgba(35, 62, 115, 0.88);
   word-break: break-word;
+  border: 1px solid rgba(155, 185, 235, 0.26);
 }
 
 .shell-device-dialog__config-button {
@@ -685,7 +692,7 @@ export default {
   align-items: center;
   justify-content: center;
   gap: 14px;
-  color: rgba(171, 189, 216, 0.72);
+  color: rgba(72, 105, 162, 0.72);
   text-align: center;
 }
 

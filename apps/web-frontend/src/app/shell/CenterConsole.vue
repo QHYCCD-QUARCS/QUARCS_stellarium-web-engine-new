@@ -1,19 +1,12 @@
 <template>
   <section class="center-console">
-    <span class="control-tag control-tag--panel">C-Panel</span>
-    <div class="center-console__topline">
-      <span class="control-tag control-tag--inline">C-Topline</span>
-      {{ topline }}
-    </div>
-
     <div class="center-console__metrics">
       <div class="metrics-card metrics-card--object">
-        <span class="control-tag">C-ObjectCard</span>
+        <div class="metrics-card__eyebrow">Target</div>
         <h2>{{ objectTitle }}</h2>
         <p>{{ objectLine1 }}</p>
         <p>{{ objectLine2 }}</p>
         <div class="metrics-card__status">
-          <span class="control-tag control-tag--inline">C-Conn</span>
           <span>Connection</span>
           <span class="metrics-card__dot"></span>
           <span>{{ connectionLabel }}</span>
@@ -21,7 +14,7 @@
       </div>
 
       <div class="metrics-card metrics-card--guide">
-        <span class="control-tag">C-GuideCard</span>
+        <div class="metrics-card__eyebrow">Telemetry</div>
         <h3>{{ guideTitle }}</h3>
         <p>{{ guideLine1 }}</p>
         <p>{{ guideLine2 }}</p>
@@ -87,30 +80,41 @@ export default {
   min-width: 0;
   height: 100%;
   pointer-events: none;
-  color: rgba(245, 248, 252, 0.94);
-  padding: 42px 8px 0;
-}
-
-.center-console__topline {
-  position: relative;
-  text-align: center;
-  letter-spacing: 0.18em;
-  font-size: 14px;
-  color: rgba(245, 248, 252, 0.56);
-  text-transform: uppercase;
+  color: var(--qs-text-primary);
+  padding: 22px 0 0;
+  overflow: visible;
 }
 
 .center-console__metrics {
   display: flex;
   justify-content: space-between;
   gap: 24px;
-  margin-top: 20px;
+  margin: 0 -52px;
 }
 
 .metrics-card {
   position: relative;
-  padding: 10px 2px;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.42);
+  min-width: 272px;
+  max-width: 320px;
+  padding: 18px 22px;
+  border-radius: 26px;
+  border: 1px solid rgba(165, 192, 238, 0.36);
+  background:
+    linear-gradient(180deg, rgba(208, 220, 244, 0.90), rgba(185, 200, 230, 0.94));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.52),
+    inset 0 -18px 28px rgba(130, 155, 205, 0.18),
+    0 18px 30px rgba(60, 85, 140, 0.14);
+  text-shadow: 0 1px 6px rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(16px);
+}
+
+.metrics-card__eyebrow {
+  margin-bottom: 10px;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--qs-text-muted);
 }
 
 .metrics-card h2,
@@ -121,23 +125,24 @@ export default {
 
 .metrics-card h2,
 .metrics-card h3 {
-  margin-bottom: 8px;
-  font-weight: 500;
+  margin-bottom: 10px;
+  font-weight: 600;
 }
 
 .metrics-card h2 {
-  font-size: 20px;
+  font-size: 28px;
 }
 
 .metrics-card h3 {
-  font-size: 18px;
+  font-size: 22px;
   text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .metrics-card p {
-  margin-bottom: 6px;
-  font-size: 16px;
-  color: rgba(245, 248, 252, 0.82);
+  margin-bottom: 7px;
+  font-size: 14px;
+  color: var(--qs-text-secondary);
 }
 
 .metrics-card__status {
@@ -145,8 +150,10 @@ export default {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 10px;
-  font-size: 15px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(148, 178, 230, 0.28);
+  font-size: 13px;
 }
 
 .metrics-card__dot {
@@ -160,16 +167,4 @@ export default {
 .control-tag {
   display: none !important;
 }
-
-.control-tag--panel {
-  left: 50%;
-  top: 8px;
-  transform: translateX(-50%);
-}
-
-.control-tag--inline {
-  left: 50%;
-  transform: translateX(-50%);
-}
-
 </style>

@@ -6,9 +6,10 @@
           class="app-shell__top"
           :title="topBarTitle"
           :subtitle="connectionSummary"
-          :primary-actions="[]"
-          :secondary-actions="[]"
-          :active-action-ids="[]"
+          :primary-actions="topBarPrimaryActions"
+          :secondary-actions="topBarSecondaryActions"
+          :active-action-ids="activeTopActionIds"
+          @top-action="handleTopAction"
         />
         <TargetSearch
           v-show="showCompactSearch"
@@ -87,6 +88,13 @@
         </div>
 
         <div class="app-shell__overlay-layer" :class="{ 'app-shell__overlay-layer--hidden': legacyOverlayOpen }">
+          <div
+            v-if="currentMode === 'mount' && !isSettingsMode"
+            class="app-shell__mount-brand"
+          >
+            <span class="app-shell__mount-brand-text">QUARCS</span>
+            <span class="app-shell__mount-brand-sub">Sky + Mount Control</span>
+          </div>
           <ChartComponent
             v-show="guidingPanelVisible"
             ref="guidingPanel"
@@ -306,21 +314,10 @@ export default {
       return map[this.currentMode] || 'Control'
     },
     topBarPrimaryActions () {
-      return [
-        { id: 'top-devices', label: 'Devices' },
-        { id: 'top-settings', label: 'Settings' },
-        { id: 'top-schedule', label: 'Schedule' },
-        { id: 'top-files', label: 'Files' }
-      ]
+      return []
     },
     topBarSecondaryActions () {
-      return [
-        { id: 'top-allocate', label: 'Bind' },
-        { id: 'top-debug', label: 'Debug' },
-        { id: 'top-time', label: 'Time' },
-        { id: 'top-hotspot', label: 'WiFi' },
-        { id: 'top-location', label: 'Loc' }
-      ]
+      return []
     },
     activeTopActionIds () {
       const active = []
@@ -425,13 +422,13 @@ export default {
       if (this.currentMode === 'settings') {
         return [
           { id: 'settings-device-telescope', icon: 'mdi-telescope', label: 'SCOPE', tag: 'R-Scope' },
-          { id: 'settings-device-focuser', icon: 'mdi-tune-vertical-variant', label: 'FOC', tag: 'R-Foc' },
+          { id: 'settings-device-focuser', icon: 'mdi-focus-field', label: 'FOC', tag: 'R-Foc' },
           { id: 'settings-device-cfw', icon: 'mdi-image-filter-center-focus-strong', label: 'CFW', tag: 'R-CFW' }
         ]
       }
       if (this.currentMode === 'capture') {
         return [
-          { id: 'capture-exp', icon: 'mdi-timer-outline', label: 'EXP', tag: 'R-EXP' },
+          { id: 'capture-exp', icon: 'mdi-progress-clock', label: 'EXP', tag: 'R-EXP' },
           { id: 'capture-filter', icon: 'mdi-image-filter-center-focus-strong', label: this.currentFilterLabel, tag: 'R-CFW' },
           { id: 'capture-save', icon: 'mdi-content-save-outline', label: 'SAVE', tag: 'R-Save' }
         ]
@@ -439,15 +436,15 @@ export default {
       if (this.currentMode === 'guiding') {
         return [
           { id: 'guiding-loop', icon: 'mdi-refresh', label: this.guiderLoopActive ? 'Loop On' : 'Loop', tag: 'R-Loop' },
-          { id: 'guiding-exp', icon: 'mdi-timer-outline', label: `${this.guiderExpTimeMs}ms`, tag: 'R-EXP' },
-          { id: 'guiding-recalibrate', icon: 'mdi-compass-rose', label: 'Recal', tag: 'R-Recal' }
+          { id: 'guiding-exp', icon: 'mdi-progress-clock', label: `${this.guiderExpTimeMs}ms`, tag: 'R-EXP' },
+          { id: 'guiding-recalibrate', icon: 'mdi-radar', label: 'Recal', tag: 'R-Recal' }
         ]
       }
       if (this.currentMode === 'focus') {
         return [
           { id: 'focus-speed', icon: 'mdi-speedometer', label: `SPD ${this.focuserSpeedText}`, tag: 'R-Speed' },
           { id: 'focus-roi', icon: 'mdi-select-drag', label: `ROI ${this.focuserRoiText}`, tag: 'R-ROI' },
-          { id: 'focus-calibration', icon: 'mdi-chart-bell-curve-cumulative', label: 'Calib', tag: 'R-Calib' }
+          { id: 'focus-calibration', icon: 'mdi-chart-bell-curve', label: 'Calib', tag: 'R-Calib' }
         ]
       }
       return [
@@ -1445,7 +1442,7 @@ export default {
   top: 54px;
   left: 50%;
   z-index: 255;
-  width: min(360px, calc(100% - 560px));
+  width: min(390px, calc(100% - 660px));
   min-width: 220px;
   transform: translateX(-50%);
 }
@@ -1453,35 +1450,52 @@ export default {
 .app-shell__stage-frame {
   pointer-events: none;
   position: absolute;
-  inset: 26px 18px 18px;
-  border-radius: 44px;
-  border: 1px solid rgba(214, 226, 244, 0.12);
+  inset: 18px 10px 12px;
+  border-radius: 56px;
+  border: 1px solid var(--qs-border-soft);
   background:
-    radial-gradient(circle at 0% 52%, rgba(94, 136, 210, 0.09), transparent 18%),
-    radial-gradient(circle at 100% 52%, rgba(94, 136, 210, 0.09), transparent 18%),
-    radial-gradient(circle at 50% 0%, rgba(143, 182, 255, 0.08), transparent 24%),
-    radial-gradient(circle at 50% 100%, rgba(143, 182, 255, 0.06), transparent 26%),
-    linear-gradient(180deg, rgba(8, 15, 27, 0.04), rgba(3, 8, 16, 0.12));
+    radial-gradient(circle at 50% -4%, rgba(170, 210, 255, 0.12), transparent 22%),
+    radial-gradient(circle at 12% 50%, rgba(91, 134, 219, 0.11), transparent 18%),
+    radial-gradient(circle at 88% 50%, rgba(91, 134, 219, 0.11), transparent 18%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 12%, transparent 84%, rgba(255, 255, 255, 0.03)),
+    linear-gradient(180deg, rgba(8, 14, 25, 0.18), rgba(2, 6, 12, 0.4));
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
-    inset 0 -40px 120px rgba(2, 7, 16, 0.18),
-    inset 0 24px 72px rgba(115, 161, 238, 0.03);
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    inset 0 -52px 120px rgba(2, 7, 16, 0.36),
+    inset 0 32px 80px rgba(115, 161, 238, 0.06),
+    0 30px 80px var(--qs-panel-shadow);
 }
 
 .app-shell__stage-frame--hidden {
   opacity: 0;
 }
 
+.app-shell__stage-frame::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border-radius: 46px;
+}
+
+.app-shell__stage-frame::before {
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -20px 50px rgba(4, 10, 18, 0.3);
+}
+
 .app-shell__settings-backdrop {
   position: absolute;
-  inset: 26px 18px 18px;
-  border-radius: 44px;
+  inset: 18px 10px 12px;
+  border-radius: 56px;
   background:
-    radial-gradient(circle at 50% 0%, rgba(68, 106, 168, 0.16), transparent 28%),
-    linear-gradient(180deg, rgba(6, 11, 20, 0.96) 0%, rgba(3, 8, 16, 0.98) 100%);
+    radial-gradient(circle at 50% 0%, rgba(200, 220, 255, 0.22), transparent 28%),
+    linear-gradient(180deg, rgba(198, 212, 238, 0.96) 0%, rgba(178, 195, 228, 0.98) 100%);
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
-    0 30px 80px rgba(0, 0, 0, 0.3);
+    inset 0 0 0 1px rgba(165, 192, 238, 0.40),
+    inset 0 1px 0 rgba(255, 255, 255, 0.52),
+    0 30px 80px rgba(60, 85, 140, 0.22);
 }
 
 .control-tag {
@@ -1490,11 +1504,11 @@ export default {
 
 .app-shell__body {
   position: absolute;
-  inset: 26px 24px 18px 24px;
+  inset: 22px 18px 14px 18px;
   display: flex;
   justify-content: space-between;
   align-items: stretch;
-  gap: 14px;
+  gap: 8px;
 }
 
 .app-shell__body--hidden {
@@ -1528,15 +1542,46 @@ export default {
 }
 
 .app-shell__overlay-panel--guiding {
-  transform: translateY(-44px);
+  transform: translateY(-12px);
 }
 
 .app-shell__overlay-panel--capture {
-  transform: translateY(-34px);
+  transform: translateY(-10px);
 }
 
 .app-shell__overlay-panel--focus {
-  transform: translateY(-22px);
+  transform: translateY(-8px);
+}
+
+.app-shell__mount-brand {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+  z-index: 1;
+  white-space: nowrap;
+}
+
+.app-shell__mount-brand-text {
+  font-size: 68px;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  color: rgba(155, 175, 215, 0.28);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.app-shell__mount-brand-sub {
+  font-size: 12px;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: rgba(138, 162, 205, 0.22);
+  font-weight: 500;
 }
 
 .app-shell__aux-layer {
@@ -1590,35 +1635,42 @@ export default {
 }
 
 .app-shell__search::v-deep(.v-input__slot) {
-  min-height: 42px !important;
-  padding: 0 14px !important;
-  border-radius: 18px !important;
-  background: rgba(7, 16, 30, 0.56) !important;
+  min-height: 44px !important;
+  padding: 0 16px !important;
+  border-radius: 20px !important;
+  background: linear-gradient(180deg, rgba(212, 224, 248, 0.94), rgba(190, 206, 236, 0.96)) !important;
   box-shadow:
-    inset 0 1px 0 rgba(234, 243, 255, 0.12),
-    inset 0 0 0 1px rgba(134, 177, 248, 0.18),
-    0 12px 28px rgba(1, 6, 14, 0.18) !important;
-  backdrop-filter: blur(14px);
+    inset 0 1px 0 rgba(255, 255, 255, 0.56),
+    inset 0 0 0 1px rgba(155, 190, 248, 0.40),
+    0 14px 28px rgba(60, 85, 140, 0.16) !important;
+  backdrop-filter: blur(16px);
 }
 
 .app-shell__search::v-deep(.v-text-field__slot input),
 .app-shell__search::v-deep(.v-label),
 .app-shell__search::v-deep(.v-input__prepend-inner .v-icon) {
-  color: rgba(240, 246, 252, 0.9) !important;
+  color: rgba(22, 42, 82, 0.90) !important;
 }
 
 .app-shell__search::v-deep(.v-list) {
   margin-top: 8px;
-  border-radius: 18px;
-  background: rgba(8, 15, 27, 0.88) !important;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(205, 218, 244, 0.97), rgba(185, 200, 230, 0.98)) !important;
   box-shadow:
-    inset 0 0 0 1px rgba(132, 176, 247, 0.16),
-    0 18px 36px rgba(1, 5, 12, 0.24);
+    inset 0 1px 0 rgba(255, 255, 255, 0.52),
+    inset 0 0 0 1px rgba(155, 188, 245, 0.36),
+    0 18px 36px rgba(60, 85, 140, 0.20);
   backdrop-filter: blur(16px);
 }
 
 .app-shell__search::v-deep(.v-list-item) {
   min-height: 56px;
+  color: rgba(22, 42, 82, 0.90) !important;
+}
+
+.app-shell__search::v-deep(.v-list-item__title),
+.app-shell__search::v-deep(.v-list-item__subtitle) {
+  color: rgba(22, 42, 82, 0.90) !important;
 }
 
 @media (max-width: 960px) {
@@ -1634,7 +1686,7 @@ export default {
   }
 
   .app-shell__search {
-    top: 58px;
+    top: 52px;
     width: min(320px, calc(100% - 80px));
     min-width: 0;
   }

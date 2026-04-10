@@ -774,16 +774,16 @@ export default {
   position: absolute;
   overflow: hidden;
   background:
-    linear-gradient(180deg, rgba(18, 28, 46, 0.92), rgba(8, 14, 24, 0.94));
+    linear-gradient(180deg, rgba(205, 218, 242, 0.94), rgba(182, 198, 228, 0.96));
   backdrop-filter: blur(16px);
   border-radius: 24px;
-  border: 1px solid rgba(147, 188, 255, 0.16);
+  border: 1px solid rgba(165, 192, 238, 0.40);
   box-sizing: border-box;
   transition: width 0.2s ease;
   box-shadow:
-    inset 0 1px 0 rgba(241, 246, 255, 0.12),
-    inset 0 0 0 1px rgba(122, 167, 237, 0.08),
-    0 22px 40px rgba(1, 6, 14, 0.24);
+    inset 0 1px 0 rgba(255, 255, 255, 0.56),
+    inset 0 0 0 1px rgba(155, 188, 242, 0.22),
+    0 22px 40px rgba(60, 85, 140, 0.20);
 }
 
 .chart-panel::before {
@@ -793,7 +793,7 @@ export default {
   right: 14px;
   top: 42px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(145, 186, 248, 0.34), transparent);
+  background: linear-gradient(90deg, transparent, rgba(125, 168, 230, 0.44), transparent);
 }
 
 @keyframes showPanelAnimation {
@@ -892,14 +892,14 @@ export default {
   height: 34px;
   user-select: none;
   background:
-    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+    linear-gradient(180deg, rgba(212, 224, 248, 0.96), rgba(188, 204, 234, 0.98));
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(147, 188, 255, 0.16);
+  border: 1px solid rgba(165, 192, 238, 0.42);
   border-radius: 50%;
   box-sizing: border-box;
   box-shadow:
-    inset 0 1px 0 rgba(236, 243, 255, 0.16),
-    0 10px 18px rgba(1, 6, 14, 0.18);
+    inset 0 1px 0 rgba(255, 255, 255, 0.58),
+    0 10px 18px rgba(60, 85, 140, 0.16);
 }
 
 .btn-Left {
@@ -907,14 +907,14 @@ export default {
   height: 34px;
   user-select: none;
   background:
-    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+    linear-gradient(180deg, rgba(212, 224, 248, 0.96), rgba(188, 204, 234, 0.98));
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(147, 188, 255, 0.16);
+  border: 1px solid rgba(165, 192, 238, 0.42);
   border-radius: 50%;
   box-sizing: border-box;
   box-shadow:
-    inset 0 1px 0 rgba(236, 243, 255, 0.16),
-    0 10px 18px rgba(1, 6, 14, 0.18);
+    inset 0 1px 0 rgba(255, 255, 255, 0.58),
+    0 10px 18px rgba(60, 85, 140, 0.16);
 }
 
 .btn-ROI {
@@ -922,14 +922,14 @@ export default {
   height: 34px;
   user-select: none;
   background:
-    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+    linear-gradient(180deg, rgba(212, 224, 248, 0.96), rgba(188, 204, 234, 0.98));
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(147, 188, 255, 0.16);
+  border: 1px solid rgba(165, 192, 238, 0.42);
   border-radius: 50%;
   box-sizing: border-box;
   box-shadow:
-    inset 0 1px 0 rgba(236, 243, 255, 0.16),
-    0 10px 18px rgba(1, 6, 14, 0.18);
+    inset 0 1px 0 rgba(255, 255, 255, 0.58),
+    0 10px 18px rgba(60, 85, 140, 0.16);
 }
 
 .btn-Auto {
@@ -937,14 +937,14 @@ export default {
   height: 34px;
   user-select: none;
   background:
-    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+    linear-gradient(180deg, rgba(212, 224, 248, 0.96), rgba(188, 204, 234, 0.98));
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(147, 188, 255, 0.16);
+  border: 1px solid rgba(165, 192, 238, 0.42);
   border-radius: 50%;
   box-sizing: border-box;
   box-shadow:
-    inset 0 1px 0 rgba(236, 243, 255, 0.16),
-    0 10px 18px rgba(1, 6, 14, 0.18);
+    inset 0 1px 0 rgba(255, 255, 255, 0.58),
+    0 10px 18px rgba(60, 85, 140, 0.16);
 }
 
 .btn-Right {
@@ -952,24 +952,23 @@ export default {
   height: 34px;
   user-select: none;
   background:
-    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+    linear-gradient(180deg, rgba(212, 224, 248, 0.96), rgba(188, 204, 234, 0.98));
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(147, 188, 255, 0.16);
+  border: 1px solid rgba(165, 192, 238, 0.42);
   border-radius: 50%;
   box-sizing: border-box;
   box-shadow:
-    inset 0 1px 0 rgba(236, 243, 255, 0.16),
-    0 10px 18px rgba(1, 6, 14, 0.18);
+    inset 0 1px 0 rgba(255, 255, 255, 0.58),
+    0 10px 18px rgba(60, 85, 140, 0.16);
 }
 
 .btn-Steps {
   width: 30px;
   height: 30px;
-
   user-select: none;
-  background-color: rgba(64, 64, 64, 0.5);
+  background: linear-gradient(180deg, rgba(205, 218, 244, 0.88), rgba(182, 198, 228, 0.92));
   backdrop-filter: blur(5px);
-  border: none;
+  border: 1px solid rgba(155, 185, 238, 0.36);
   border-radius: 50%;
   box-sizing: border-box;
 }
@@ -977,11 +976,10 @@ export default {
 .btn-Goto {
   width: 30px;
   height: 30px;
-
   user-select: none;
-  background-color: rgba(64, 64, 64, 0.5);
+  background: linear-gradient(180deg, rgba(205, 218, 244, 0.88), rgba(182, 198, 228, 0.92));
   backdrop-filter: blur(5px);
-  border: none;
+  border: 1px solid rgba(155, 185, 238, 0.36);
   border-radius: 50%;
   box-sizing: border-box;
 }
@@ -1005,11 +1003,11 @@ export default {
   height: 64px;
   user-select: none;
   background:
-    linear-gradient(180deg, rgba(10, 16, 28, 0.76), rgba(4, 9, 17, 0.88));
-  border: 1px solid rgba(149, 190, 252, 0.18);
+    linear-gradient(180deg, rgba(195, 210, 238, 0.82), rgba(175, 192, 225, 0.90));
+  border: 1px solid rgba(165, 192, 238, 0.38);
   border-radius: 12px;
   box-sizing: border-box;
-  box-shadow: inset 0 1px 0 rgba(236, 243, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.48);
 }
 
 .Speed-Bar {
@@ -1020,11 +1018,11 @@ export default {
   height: 16px;
   user-select: none;
   padding: 0 8px;
-  background: rgba(18, 28, 46, 0.34);
-  border: 1px solid rgba(147, 188, 255, 0.08);
+  background: rgba(205, 218, 244, 0.72);
+  border: 1px solid rgba(155, 188, 238, 0.38);
   border-radius: 999px;
   box-sizing: border-box;
-  color: rgba(217, 232, 255, 0.76);
+  color: rgba(28, 52, 95, 0.88);
   text-align: center;
   line-height: 14px;
   white-space: nowrap;
@@ -1036,13 +1034,13 @@ export default {
   height: 10px;
   user-select: none;
   padding: 0 10px;
-  background: rgba(18, 28, 46, 0.34);
-  border: 1px solid rgba(147, 188, 255, 0.08);
+  background: rgba(205, 218, 244, 0.72);
+  border: 1px solid rgba(155, 188, 238, 0.38);
   border-radius: 999px;
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
-  color: rgba(236, 243, 255, 0.84);
+  color: rgba(22, 48, 92, 0.88);
   font-size: 10px;
   text-align: center;
   line-height: 14px;
@@ -1057,11 +1055,11 @@ export default {
   height: 16px;
   user-select: none;
   padding: 0 8px;
-  background: rgba(18, 28, 46, 0.34);
-  border: 1px solid rgba(147, 188, 255, 0.08);
+  background: rgba(205, 218, 244, 0.72);
+  border: 1px solid rgba(155, 188, 238, 0.38);
   border-radius: 999px;
   box-sizing: border-box;
-  color: rgba(217, 232, 255, 0.76);
+  color: rgba(28, 52, 95, 0.88);
   text-align: center;
   line-height: 14px;
   white-space: nowrap;
@@ -1081,14 +1079,14 @@ export default {
   height: 34px;
   user-select: none;
   background:
-    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+    linear-gradient(180deg, rgba(212, 224, 248, 0.96), rgba(188, 204, 234, 0.98));
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(147, 188, 255, 0.16);
+  border: 1px solid rgba(165, 192, 238, 0.42);
   border-radius: 50%;
   box-sizing: border-box;
   box-shadow:
-    inset 0 1px 0 rgba(236, 243, 255, 0.16),
-    0 10px 18px rgba(1, 6, 14, 0.18);
+    inset 0 1px 0 rgba(255, 255, 255, 0.58),
+    0 10px 18px rgba(60, 85, 140, 0.16);
 }
 
 .active-calibration {
@@ -1111,14 +1109,14 @@ export default {
   height: 34px;
   user-select: none;
   background:
-    linear-gradient(180deg, rgba(33, 49, 78, 0.86), rgba(12, 19, 33, 0.92));
+    linear-gradient(180deg, rgba(212, 224, 248, 0.96), rgba(188, 204, 234, 0.98));
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(147, 188, 255, 0.16);
+  border: 1px solid rgba(165, 192, 238, 0.42);
   border-radius: 50%;
   box-sizing: border-box;
   box-shadow:
-    inset 0 1px 0 rgba(236, 243, 255, 0.16),
-    0 10px 18px rgba(1, 6, 14, 0.18);
+    inset 0 1px 0 rgba(255, 255, 255, 0.58),
+    0 10px 18px rgba(60, 85, 140, 0.16);
 }
 
 .active-loop {

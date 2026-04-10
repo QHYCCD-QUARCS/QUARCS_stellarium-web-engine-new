@@ -161,11 +161,25 @@ export default {
   flex: 1 1 auto;
   min-width: 0;
   height: 100%;
-  padding: 36px 12px 92px;
+  padding: 34px 12px 86px;
   display: flex;
   flex-direction: column;
   gap: 18px;
-  color: rgba(242, 247, 252, 0.96);
+  color: var(--qs-text-primary);
+}
+
+.settings-workspace::before {
+  content: "";
+  position: absolute;
+  inset: 76px 6px 56px;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(118, 167, 244, 0.08), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 12%, transparent 88%, rgba(255, 255, 255, 0.02));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    inset 0 0 0 1px rgba(128, 166, 227, 0.06);
+  pointer-events: none;
 }
 
 .settings-workspace__header {
@@ -188,13 +202,13 @@ export default {
   font-size: 12px;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(170, 188, 214, 0.82);
+  color: var(--qs-text-muted);
 }
 
 .settings-workspace__title {
   margin: 0;
-  font-size: 34px;
-  font-weight: 600;
+  font-size: 42px;
+  font-weight: 700;
   letter-spacing: 0.05em;
 }
 
@@ -209,7 +223,7 @@ export default {
   font-size: 12px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(170, 188, 214, 0.82);
+  color: rgba(60, 88, 135, 0.82);
 }
 
 .settings-workspace__language-switch {
@@ -217,8 +231,9 @@ export default {
   gap: 8px;
   padding: 6px;
   border-radius: 999px;
-  background: rgba(9, 18, 31, 0.56);
-  border: 1px solid rgba(146, 176, 222, 0.16);
+  background: linear-gradient(180deg, rgba(208, 220, 244, 0.88), rgba(185, 200, 232, 0.92));
+  border: 1px solid rgba(165, 192, 238, 0.36);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.52);
 }
 
 .settings-workspace__language-button {
@@ -229,14 +244,14 @@ export default {
   border: 0;
   border-radius: 999px;
   background: transparent;
-  color: rgba(198, 210, 227, 0.88);
+  color: rgba(45, 72, 118, 0.88);
   cursor: pointer;
   transition: background 0.18s ease, color 0.18s ease;
 }
 
 .settings-workspace__language-button--active {
-  background: rgba(69, 120, 197, 0.34);
-  color: rgba(244, 248, 252, 0.96);
+  background: rgba(148, 185, 248, 0.40);
+  color: rgba(18, 38, 78, 0.96);
 }
 
 .settings-workspace__status {
@@ -253,32 +268,35 @@ export default {
   gap: 8px;
   padding: 10px 14px;
   border-radius: 999px;
-  background: rgba(9, 18, 31, 0.56);
-  border: 1px solid rgba(146, 176, 222, 0.16);
-  backdrop-filter: blur(10px);
+  background: linear-gradient(180deg, rgba(208, 220, 244, 0.90), rgba(185, 200, 232, 0.94));
+  border: 1px solid rgba(165, 192, 238, 0.36);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.52);
+  backdrop-filter: blur(14px);
   font-size: 13px;
 }
 
 .settings-workspace__status-chip strong {
   font-weight: 600;
-  color: rgba(245, 249, 255, 0.94);
+  color: rgba(18, 38, 78, 0.94);
 }
 
 .settings-workspace__status-chip span {
-  color: rgba(198, 210, 227, 0.88);
+  color: rgba(45, 72, 118, 0.88);
 }
 
 .settings-workspace__panel {
   flex: 1 1 auto;
   min-height: 0;
-  padding: 22px 24px 24px;
-  border-radius: 30px;
-  border: 1px solid rgba(157, 185, 228, 0.14);
+  padding: 24px 26px 26px;
+  border-radius: 34px;
+  border: 1px solid rgba(165, 192, 238, 0.36);
   background:
-    linear-gradient(180deg, rgba(14, 22, 39, 0.94) 0%, rgba(10, 16, 29, 0.92) 100%);
+    radial-gradient(circle at 50% 0%, rgba(200, 220, 255, 0.18), transparent 22%),
+    linear-gradient(180deg, rgba(205, 218, 242, 0.94) 0%, rgba(182, 198, 228, 0.96) 100%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 30px 70px rgba(0, 0, 0, 0.26);
+    inset 0 1px 0 rgba(255, 255, 255, 0.52),
+    inset 0 -24px 38px rgba(130, 155, 205, 0.14),
+    0 30px 70px rgba(60, 85, 140, 0.20);
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -312,7 +330,7 @@ export default {
   font-size: 12px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(156, 176, 209, 0.72);
+  color: rgba(72, 100, 150, 0.72);
 }
 
 .settings-workspace__grid {
@@ -328,27 +346,30 @@ export default {
 .settings-workspace__card {
   min-height: 116px;
   padding: 18px 18px 16px;
-  border: 1px solid rgba(145, 175, 221, 0.14);
+  border: 1px solid rgba(165, 192, 238, 0.38);
   border-radius: 22px;
   background:
-    linear-gradient(180deg, rgba(26, 40, 66, 0.92) 0%, rgba(17, 27, 44, 0.92) 100%);
-  color: rgba(245, 248, 252, 0.96);
+    linear-gradient(180deg, rgba(218, 228, 248, 0.94) 0%, rgba(195, 210, 238, 0.96) 100%);
+  color: rgba(22, 42, 82, 0.96);
   text-align: left;
   cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.58),
+    inset 0 -14px 24px rgba(130, 155, 205, 0.14);
   transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
 .settings-workspace__card:hover {
   transform: translateY(-2px);
-  border-color: rgba(155, 197, 255, 0.3);
-  box-shadow: 0 18px 32px rgba(4, 11, 20, 0.22);
+  border-color: rgba(130, 175, 248, 0.50);
+  box-shadow: 0 18px 32px rgba(60, 85, 140, 0.18);
 }
 
 .settings-workspace__card--active {
-  border-color: rgba(126, 179, 255, 0.44);
+  border-color: rgba(100, 158, 248, 0.58);
   box-shadow:
-    inset 0 0 0 1px rgba(126, 179, 255, 0.18),
-    0 18px 36px rgba(16, 34, 66, 0.3);
+    inset 0 0 0 1px rgba(120, 170, 255, 0.28),
+    0 18px 36px rgba(60, 95, 165, 0.22);
 }
 
 .settings-workspace__card--compact {
@@ -369,9 +390,11 @@ export default {
   align-items: center;
   justify-content: center;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(214, 231, 255, 0.96);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(175, 200, 240, 0.28));
+  color: rgba(35, 68, 140, 0.96);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.58),
+    0 10px 16px rgba(60, 85, 140, 0.12);
 }
 
 .settings-workspace__card-title {
@@ -384,7 +407,7 @@ export default {
   display: block;
   font-size: 13px;
   line-height: 1.5;
-  color: rgba(201, 213, 228, 0.86);
+  color: rgba(52, 80, 128, 0.82);
 }
 
 @media (max-width: 1400px) {
