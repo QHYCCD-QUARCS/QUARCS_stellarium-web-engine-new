@@ -81,21 +81,31 @@ export default {
   height: 100%;
   pointer-events: none;
   color: var(--qs-text-primary);
-  padding: 22px 0 0;
+  padding: 0;
   overflow: visible;
 }
 
 .center-console__metrics {
+  position: absolute;
+  top: 46px;
+  /* Stage is 1600px; wings 510px each; center-console ~528px.
+     -265px places cards between wing inner edge (~250px) and search box (~640px). */
+  left: -200px;
+  right: -200px;
   display: flex;
   justify-content: space-between;
-  gap: 24px;
-  margin: 0 -52px;
+  z-index: 210;
+  pointer-events: none;
+}
+
+.center-console__metrics > * {
+  pointer-events: auto;
 }
 
 .metrics-card {
   position: relative;
-  min-width: 272px;
-  max-width: 320px;
+  min-width: 200px;
+  max-width: 280px;
   padding: 18px 22px;
   border-radius: 26px;
   border: 1px solid rgba(165, 192, 238, 0.36);

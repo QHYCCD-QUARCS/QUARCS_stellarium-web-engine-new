@@ -20,6 +20,23 @@
         </div>
         <div v-if="isSettingsMode" class="app-shell__settings-backdrop"></div>
 
+        <!-- Van Gogh Starry Night background for camera / guiding / focus modes -->
+        <transition name="art-bg-fade">
+          <div
+            v-if="!isSettingsMode && !legacyOverlayOpen && ['capture','guiding','focus'].includes(currentMode)"
+            class="app-shell__art-bg"
+          ></div>
+        </transition>
+
+        <!-- QUARCS branding overlay — always on top of art-bg -->
+        <div
+          v-if="!isSettingsMode && !legacyOverlayOpen && ['capture','guiding','focus'].includes(currentMode)"
+          class="app-shell__quarcs-brand"
+        >
+          <img src="@/assets/images/logo.svg" class="app-shell__quarcs-brand-logo" alt="" />
+          <span class="app-shell__quarcs-brand-text">QUARCS</span>
+        </div>
+
         <div class="app-shell__body" :class="{ 'app-shell__body--hidden': legacyOverlayOpen }">
           <LeftControlWing
             class="app-shell__left"
@@ -1485,6 +1502,58 @@ export default {
     inset 0 -20px 50px rgba(4, 10, 18, 0.3);
 }
 
+/* ── Van Gogh Starry Night art background (capture / guiding / focus modes) ── */
+.app-shell__art-bg {
+  position: absolute;
+  inset: 18px 10px 12px;
+  border-radius: 56px;
+  background-image: url('./starry_night_for_cursor.png');
+  background-size: cover;
+  background-position: center 20%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ── QUARCS branding overlay — on top of art-bg ── */
+.app-shell__quarcs-brand {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.app-shell__quarcs-brand-logo {
+  width: 120px;
+  height: 120px;
+  opacity: 0.92;
+  filter: drop-shadow(0 2px 16px rgba(0, 0, 0, 0.5));
+}
+
+.app-shell__quarcs-brand-text {
+  font-size: 86px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow:
+    0 2px 20px rgba(0, 0, 0, 0.6),
+    0 0 60px rgba(0, 0, 0, 0.3);
+  line-height: 1;
+}
+
+.art-bg-fade-enter-active,
+.art-bg-fade-leave-active {
+  transition: opacity 0.7s ease;
+}
+.art-bg-fade-enter,
+.art-bg-fade-leave-to {
+  opacity: 0;
+}
+
 .app-shell__settings-backdrop {
   position: absolute;
   inset: 18px 10px 12px;
@@ -1542,46 +1611,48 @@ export default {
 }
 
 .app-shell__overlay-panel--guiding {
-  transform: translateY(-12px);
+  transform: translateY(0px);
 }
 
 .app-shell__overlay-panel--capture {
-  transform: translateY(-10px);
+  transform: translateY(0px);
 }
 
 .app-shell__overlay-panel--focus {
-  transform: translateY(-8px);
+  transform: translateY(0px);
 }
 
+/* Mount mode QUARCS watermark — center of bottom bridge, above metallic surface */
 .app-shell__mount-brand {
   position: absolute;
-  bottom: 14px;
+  bottom: 42px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   pointer-events: none;
   z-index: 1;
   white-space: nowrap;
 }
 
 .app-shell__mount-brand-text {
-  font-size: 68px;
+  font-size: 36px;
   font-weight: 800;
-  letter-spacing: 0.24em;
-  color: rgba(155, 175, 215, 0.28);
+  letter-spacing: 0.28em;
+  /* Visible on silver metallic: dark blue-gray at 45% opacity */
+  color: rgba(88, 115, 175, 0.45);
   text-transform: uppercase;
   line-height: 1;
 }
 
 .app-shell__mount-brand-sub {
-  font-size: 12px;
-  letter-spacing: 0.36em;
+  font-size: 9.5px;
+  letter-spacing: 0.40em;
   text-transform: uppercase;
-  color: rgba(138, 162, 205, 0.22);
-  font-weight: 500;
+  color: rgba(100, 130, 188, 0.36);
+  font-weight: 600;
 }
 
 .app-shell__aux-layer {

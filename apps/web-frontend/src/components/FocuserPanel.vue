@@ -155,7 +155,7 @@ export default {
   data() {
     return {
       // width: 330, // 初始宽度
-      bottom: 10,
+      bottom: 14,
       ComponentPadding: 0,
       height: 132,
 
@@ -287,16 +287,11 @@ export default {
       const screenWidth = this.getViewportWidth();
       const { logicalWidth, visibleWidth, scale } = this.getStageMetrics()
       if (this.isTouchMobileViewport(screenWidth)) {
-        const desiredVisibleWidth = Math.min(Math.max(Math.floor(visibleWidth * 0.36), 200), visibleWidth - 210)
+        const desiredVisibleWidth = Math.min(Math.max(Math.floor(visibleWidth * 0.46), 220), visibleWidth - 180)
         const logicalTargetWidth = Math.max(220, Math.round(desiredVisibleWidth / scale))
         this.ComponentPadding = Math.max(Math.round((logicalWidth - logicalTargetWidth) / 2), 18)
-      } else if (screenWidth <= 1024) {
-        const widthRatio = screenWidth <= 640 ? 0.78 : 0.76;
-        const targetWidth = Math.max(220, Math.floor(screenWidth * widthRatio));
-        this.ComponentPadding = Math.max(Math.round((screenWidth - targetWidth) / 2), 12);
       } else {
-        const halfWidth = screenWidth / 2 - 250;
-        this.ComponentPadding = Math.max(halfWidth, 170);
+        this.ComponentPadding = Math.max(Math.round(screenWidth / 2 - 250), 18);
       }
 
       const widthBase = this.isTouchMobileViewport(screenWidth) ? logicalWidth : screenWidth
@@ -773,17 +768,13 @@ export default {
 .chart-panel {
   position: absolute;
   overflow: hidden;
-  background:
-    linear-gradient(180deg, rgba(205, 218, 242, 0.94), rgba(182, 198, 228, 0.96));
-  backdrop-filter: blur(16px);
-  border-radius: 24px;
-  border: 1px solid rgba(165, 192, 238, 0.40);
+  background: transparent;
+  backdrop-filter: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
   box-sizing: border-box;
   transition: width 0.2s ease;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.56),
-    inset 0 0 0 1px rgba(155, 188, 242, 0.22),
-    0 22px 40px rgba(60, 85, 140, 0.20);
 }
 
 .chart-panel::before {
@@ -802,13 +793,13 @@ export default {
   }
 
   to {
-    bottom: 10px;
+    bottom: 14px;
   }
 }
 
 @keyframes hidePanelAnimation {
   from {
-    bottom: 10px;
+    bottom: 14px;
   }
 
   to {
