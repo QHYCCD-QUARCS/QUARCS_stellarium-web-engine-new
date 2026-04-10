@@ -286,18 +286,18 @@ export default {
     updatePosition() {
       const screenWidth = this.getViewportWidth();
       const { logicalWidth, visibleWidth, scale } = this.getStageMetrics()
+      const wingEdge = 518;
       if (this.isTouchMobileViewport(screenWidth)) {
         const desiredVisibleWidth = Math.min(Math.max(Math.floor(visibleWidth * 0.46), 220), visibleWidth - 180)
         const logicalTargetWidth = Math.max(220, Math.round(desiredVisibleWidth / scale))
         this.ComponentPadding = Math.max(Math.round((logicalWidth - logicalTargetWidth) / 2), 18)
       } else {
-        this.ComponentPadding = Math.max(Math.round(screenWidth / 2 - 250), 18);
+        this.ComponentPadding = Math.max(wingEdge, 18);
       }
 
-      const widthBase = this.isTouchMobileViewport(screenWidth) ? logicalWidth : screenWidth
+      const widthBase = logicalWidth
       const newWidth = Math.max(220, widthBase - (this.ComponentPadding * 2));
       this.$bus.$emit('updateFocusChartWidth', newWidth);
-      
     },
     AutoFocus() {
       const check = this.$canUseDevice('Focuser', 'AutoFocus');

@@ -187,16 +187,17 @@ export default {
     updatePosition() {
       const screenWidth = this.getViewportWidth();
       const { logicalWidth, visibleWidth, scale } = this.getStageMetrics()
+      // Wing width (510) + body gap (8) = 518px on each side in the 1600px stage
+      const wingEdge = 518;
       if (this.isTouchMobileViewport(screenWidth)) {
         const desiredVisibleWidth = Math.min(Math.max(Math.floor(visibleWidth * 0.46), 220), visibleWidth - 180)
         const logicalTargetWidth = Math.max(220, Math.round(desiredVisibleWidth / scale))
         this.ComponentPadding = Math.max(Math.round((logicalWidth - logicalTargetWidth) / 2), 18)
       } else {
-        // Keep panel ~500px wide, centered between wing inner edges
-        this.ComponentPadding = Math.max(Math.round(screenWidth / 2 - 250), 18);
+        this.ComponentPadding = Math.max(wingEdge, 18);
       }
 
-      const widthBase = this.isTouchMobileViewport(screenWidth) ? logicalWidth : screenWidth
+      const widthBase = this.isTouchMobileViewport(screenWidth) ? logicalWidth : logicalWidth
       const newWidth = Math.max(220, widthBase - (this.ComponentPadding * 2));
       this.$bus.$emit('updateLineChartWidth', newWidth);
     },

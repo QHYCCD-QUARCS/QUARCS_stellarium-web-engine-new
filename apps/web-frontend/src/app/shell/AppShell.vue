@@ -1573,7 +1573,7 @@ export default {
 
 .app-shell__body {
   position: absolute;
-  inset: 22px 18px 14px 18px;
+  inset: 0;
   display: flex;
   justify-content: space-between;
   align-items: stretch;
